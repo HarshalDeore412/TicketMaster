@@ -1,0 +1,14 @@
+[
+    { "id": "1", "name": "IT" },
+    { "id": "2", "name": "Management" },
+    { "id": "3", "name": "HR" },
+    { "id": "4", "name": "Tech Support" },
+    { "id": "5", "name": "Growth" },
+    { "id": "6", "name": "Alliance" },
+    { "id": "7", "name": "Accounts" },
+    { "id": "8", "name": "Suspense" },
+    { "id": "9", "name": "Education Counselor" },
+    { "id": "10", "name": "TCS" },
+    { "id": "11", "name": "Other" }
+  ]
+  
