@@ -11,6 +11,9 @@ router.get('/getMyTickets',auth, Ticket.getMyTickets)
 router.get('/getUsers'  , User.getUsers)
 router.delete('/deleteUser/:_id' ,auth, isAdmin ,User.deleteUser)
 router.patch('/updateUser/:_id',auth , isAdmin, User.updateUser);
+router.patch('update-profile',auth ,User.updateProfile)
+router.get('/get-profile-details',auth , User.getProfileDetails);
+
 
 module.exports = router;
 

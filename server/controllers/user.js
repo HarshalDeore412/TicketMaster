@@ -5,14 +5,12 @@ const dotenv = require("dotenv").config();
 const OTP = require("../models/OTP");
 const mailSender = require("../utils/mailSender");
 
-// create user
-
 exports.createUser = async (req, res) => {
   try {
     const { firstName, lastName, process, email, empID, password, otp } =
       req.body;
 
-      console.log("recived all the data")
+    console.log("recived all the data");
 
     // Validate input
     if (
@@ -22,7 +20,7 @@ exports.createUser = async (req, res) => {
       !email ||
       !empID ||
       !password ||
-      !otp 
+      !otp
     ) {
       return res.status(400).json({
         success: false,
@@ -30,8 +28,7 @@ exports.createUser = async (req, res) => {
       });
     }
 
-    console.log("validated the data")
-
+    console.log("validated the data");
 
     // Validate email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -42,11 +39,11 @@ exports.createUser = async (req, res) => {
       });
     }
 
-    console.log('email validated ') 
+    console.log("email validated ");
 
-    const Email = email.toLowerCase(); 
+    const Email = email.toLowerCase();
 
-    console.log("email converted to lowercase")
+    console.log("email converted to lowercase");
 
     // Check OTP
     const isOtpAvailable = await OTP.findOne({ otp });
@@ -57,7 +54,7 @@ exports.createUser = async (req, res) => {
       });
     }
 
-    console.log("OTP verified")
+    console.log("OTP verified");
 
     // Hash password
     const hashPass = await bcrypt.hash(password, 10).catch((err) => {
@@ -69,7 +66,7 @@ exports.createUser = async (req, res) => {
       });
     });
 
-    console.log("password hashed  ")
+    console.log("password hashed  ");
 
     // Create user
     const response = await USER.create({
@@ -88,9 +85,7 @@ exports.createUser = async (req, res) => {
       });
     });
 
-    console.log('user created :')
-
-    
+    console.log("user created :");
 
     // Remove OTP document
     await OTP.deleteOne({ otp }).catch((err) => {
@@ -102,7 +97,7 @@ exports.createUser = async (req, res) => {
       });
     });
 
-    console.log('deleted OTP')
+    console.log("deleted OTP");
 
     return res.status(200).json({
       success: true,
@@ -171,7 +166,7 @@ exports.sendOTP = async (req, res) => {
     // Send OTP via email
     try {
       // await mailSender(Email, `Registration OTP`, `Your OTP is ${otp}`);
-      await mailSender(Email, "OTP Verification", `${otp}`)
+      await mailSender(Email, "OTP Verification", `${otp}`);
 
       return res.status(200).json({
         success: true,
@@ -201,14 +196,14 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     const Email = email.toLowerCase();
     console.log(Email);
-    const User = await USER.findOne({ email : Email });
+    const User = await USER.findOne({ email: Email });
     console.log("USER ", User);
 
-    if(!User){
+    if (!User) {
       return res.status(404).json({
-        success:false,
-        message : 'USER NOT FOUND'
-      })
+        success: false,
+        message: "USER NOT FOUND",
+      });
     }
 
     if (await bcrypt.compare(password, User.password)) {
@@ -246,11 +241,13 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
 exports.getUsers = async (req, res) => {
   try {
     // Validate request
-    if (!req.headers['content-type'] || req.headers['content-type'] !== 'application/json') {
+    if (
+      !req.headers["content-type"] ||
+      req.headers["content-type"] !== "application/json"
+    ) {
       throw new Error("Invalid content type");
     }
 
@@ -261,88 +258,80 @@ exports.getUsers = async (req, res) => {
     if (!users || users.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No users found"
+        message: "No users found",
       });
     }
 
-    console.log("users send")
+    console.log("users send");
 
     // Return users
     return res.status(200).json({
       success: true,
       message: "User data retrieved successfully",
-      users : users
+      users: users,
     });
   } catch (err) {
     // Handle specific errors
-    if (err.name === 'CastError') {
+    if (err.name === "CastError") {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
+        message: "Invalid ID",
       });
-    } else if (err.name === 'ValidationError') {
+    } else if (err.name === "ValidationError") {
       return res.status(400).json({
         success: false,
-        message: "Validation error"
+        message: "Validation error",
       });
     } else if (err.message === "Invalid content type") {
       return res.status(415).json({
         success: false,
-        message: "Invalid content type"
+        message: "Invalid content type",
       });
     } else {
       // Handle general errors
       console.error(err);
       return res.status(500).json({
         success: false,
-        message: "Internal server error"
+        message: "Internal server error",
       });
     }
   }
 };
 
-
-
-exports.deleteUser = async (req,res) => {
-  try{
-
-    console.log('request to delete user' , req.param._id)
+exports.deleteUser = async (req, res) => {
+  try {
+    console.log("request to delete user", req.param._id);
 
     const { _id } = req.param;
 
     const deleteUser = await USER.deleteOne(_id);
 
-    if(deleteUser){
+    if (deleteUser) {
       return res.status(200).json({
-        success:true,
-        message : 'user deleted successfully',
-      })
+        success: true,
+        message: "user deleted successfully",
+      });
     }
 
-    console.log('user deleted successfully' ,deleteUser)
-
-
-
-  }catch(err){
-    console.log("error while creating user :",err.message)
+    console.log("user deleted successfully", deleteUser);
+  } catch (err) {
+    console.log("error while creating user :", err.message);
 
     return res.status(500).json({
-      success : false,
-      message : "INTERNAL SERVER ERROR"
-    })
-
+      success: false,
+      message: "INTERNAL SERVER ERROR",
+    });
   }
-}
-
+};
 
 exports.updateUser = async (req, res) => {
   try {
     const { _id } = req.params;
     const { name, email, role } = req.body;
 
-    const user = await User.findById({_id});
+    const user = await User.findById({ _id });
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res.status(404).send({ message: "User not found" });
     }
 
     user.name = name;
@@ -351,10 +340,65 @@ exports.updateUser = async (req, res) => {
 
     await user.save();
 
-    res.send({ message: 'User updated successfully' });
+    res.send({ message: "User updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Internal Server Error' });
+    res.status(500).send({ message: "Internal Server Error" });
   }
 };
 
+exports.updateProfile = async (req, res) => {
+  try {
+
+    const _email_ = req.user.email;
+
+    console.log('request come for profile update')
+    const { firstName, lastName, jobTitle, phone } =
+      req.body;
+    const user = await User.findOneAndUpdate(
+      { _email_ },
+      { firstName, lastName, jobTitle, companyName, phone },
+      { new: true }
+    );
+   res.status(200).json({
+    success:true,
+    message: "Profile Details Updated Successfully"
+   })
+  } catch (error) {
+    res.status(500).json({
+      success:true,
+      message: "Error While updating Profile Detail"
+     })
+  }
+};
+
+
+exports.getProfileDetails = async (req, res) => {
+  try {
+    const user = req.user;
+    const email = user.email;
+
+    // Validate and sanitize user email
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Invalid user email' });
+    }
+
+    const userDetails = await USER.findOne({ email });
+
+    // Check if user details exist
+    if (!userDetails) {
+      return res.status(404).json({ success: false, message: 'User details not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Details fetched successfully',
+      profile: userDetails,
+    });
+  } catch (error) {
+    // Handle Mongoose errors specifically
+
+    // Generic error handling
+    return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+};

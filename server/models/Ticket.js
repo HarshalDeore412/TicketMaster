@@ -24,7 +24,7 @@ const ticketSchema = new mongoose.Schema({
     required: false,
   },
 
-  empID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  empID: { type: Number, required: true },
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

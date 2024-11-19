@@ -2,6 +2,8 @@
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { GrLogout } from "react-icons/gr";
+
 
 const PopUpButton = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -36,9 +38,10 @@ const PopUpButton = () => {
         <div className="flex justify-center">
             <button
                 onClick={handlePopupClick}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-red-500 flex justify-center items-center gap-2 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             >
-                Logout
+                <p>Logout</p> <GrLogout />
+
             </button>
 
             <div

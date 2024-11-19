@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Home from './Pages/Home';
 import { Routes, Route } from 'react-router-dom';
@@ -11,7 +10,7 @@ import Profile from './Components/Profile';
 
 function App() {
   return (
-    <div className=" w-[100%] h-screen mx-auto  ">
+    <div className=" w-[100%] animate-fade h-auto mx-auto  ">
 
       
       <Routes>

@@ -4,7 +4,6 @@ import {
   TiSocialLinkedin,
   TiSocialInstagram,
 } from "react-icons/ti";
-import { CiHeart } from "react-icons/ci";
 
 function Footer() {
   return (
@@ -20,7 +19,6 @@ function Footer() {
               className="mr-9 text-neutral-800 dark:text-neutral-200"
               href="https://www.linkedin.com/company/adatechsolutions"
             >
-     
               <TiSocialLinkedin />
             </a>
 
@@ -34,16 +32,12 @@ function Footer() {
         </div>
 
         {/* <!--Copyright section--> */}
-        <div className="bg-white-300 p-4 text-center text-gray-950 dark:bg-white-950 dark:text-gray-950">
-          © 2023 Copyright :
-          <a className="text-neutral-800 dark:text-neutral-400" href="">
-       
-            ADA Tech Solution Pvt Ltd
-          </a>
-          <p>
-            made with <i> <CiHeart />  </i>   by - Harshal D
-          </p>
+        <div className="bg-white-300  p-4 text-center text-gray-950 dark:bg-white-950 dark:text-gray-950">
+          © 2023 Copyright <a className="text-neutral-800 dark:text-neutral-400" href=""> ADA Tech Solution Pvt Ltd  </a>
         </div>
+        <p className=" flex justify-center items-center  ">
+          {`made with ❤ by - Harshal Deore`}
+        </p>
       </footer>
     </div>
   );

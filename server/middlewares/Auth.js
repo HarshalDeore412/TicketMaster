@@ -11,12 +11,14 @@ exports.auth = async (req, res, next) => {
   
       try {
         const decode = JWT.verify(token, process.env.JWT_SECRET);
-        console.log("decode " ,decode)
+ 
         const user = await USER.findOne({ email: decode.user.email });
         if (!user) {
           return res.status(401).json({ success: false, message: "User not found" });
         }
         req.user = user;
+
+        console.log('user authentication done......')
         next();
       } catch (error) {
         console.error('ERROR VERIFING TOKEN ', error.message);
@@ -35,6 +37,7 @@ exports.auth = async (req, res, next) => {
       if (!user || user.role !== "admin") {
         return res.status(403).json({ success: false, message: "Forbidden" });
       }
+      console.log('admin Authentication done......')
       next();
     } catch (err) {
       console.error("Error checking admin role", err.message);
