@@ -25,7 +25,7 @@ const AdminTickets = () => {
 
   useEffect(() => {
     fetchTickets();
-  }, [currentPage, filters, ticketsPerPage]);
+  }, [currentPage, filters, ticketsPerPage ]  );
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
@@ -137,7 +137,8 @@ const AdminTickets = () => {
         console.log(response.status);
   
         if (response.ok) {
-          toast.success("Deleted successfully");
+          toast.success("Ticket Deleted Successfully");
+          
         } else {
           console.error("Failed to delete the item");
           toast.error("Failed to delete the item");
