@@ -3,11 +3,11 @@ import Header from "./Header";
 import Logo from "../Assets/Logo/ADA.png";
 import toast from "react-hot-toast";
 import Process from "../Assets/JSON/process.json";
+import Loader from "./Loader";
 
 const Profile = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,7 +47,6 @@ const Profile = () => {
         }
       );
       if (response.ok) {
-        setEditing(false);
       } else {
         console.error("Failed to update profile");
       }
@@ -60,7 +59,13 @@ const Profile = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div>
+        {" "}
+        <Loader />{" "}
+      </div>
+    );
 
   return (
     <div className="w-[80%] h-screen mx-auto">
@@ -180,7 +185,7 @@ const Profile = () => {
           />
           <label
             htmlFor="floating_outlined_role"
-            className="peer-placeholder-shown:-z-10 cursor-not-allowed	 peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
+            className="peer-placeholder-shown:-z-10 cursor-not-allowed	     peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
           >
             Role
           </label>
@@ -197,7 +202,6 @@ const Profile = () => {
         <button
           className="w-fit rounded-lg text-sm px-5 py-2 focus:outline-none h-[50px] border bg-transparent border-primary text-primary focus:ring-4 focus:ring-gray-100"
           type="button"
-          onClick={() => setEditing(false)}
         >
           Cancel
         </button>
