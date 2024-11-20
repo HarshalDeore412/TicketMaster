@@ -9,13 +9,14 @@ function RaiseTicketForm() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (localStorage.getItem("token")) {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/ticket/create-ticket",
+          `${BASE_URL}ticket/create-ticket`,
           {
             method: "POST",
             headers: {

@@ -1,37 +1,43 @@
-// server.js
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 4000;
-const DBConnect = require("./config/dbConfig.js")
+const DBConnect = require("./config/dbConfig.js");
 const dotenv = require("dotenv").config();
-const cors = require('cors');
+const cors = require("cors");
 
-// add routes
-const userRoutes = require("./routes/user.js")
+// Add routes
+const userRoutes = require("./routes/user.js");
 const ticketRoutes = require("./routes/ticket.js");
 
-// database connection 
+// Database connection
 DBConnect();
-
 
 app.use(express.json());
 
-app.use( 
-  cors({
-    origin:"http://localhost:3000",
-    credential:true,
-  })
- )
+// Configure and apply CORS middleware
+const corsOptions = {
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+};
 
- app.use('/api/user' , userRoutes);
- app.use('/api/ticket', ticketRoutes)
+app.use(cors());
 
- app.get("/" , (req,res) => {
+// Custom headers for CORS
+app.use((req, res, next) => { 
+  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins 
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS'); 
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'); 
+  next();
+});
+
+app.use("/api/user", userRoutes);
+app.use("/api/ticket", ticketRoutes);
+
+app.get("/", (req, res) => {
   res.send("hello there.....");
- } )
+});
 
- app.listen( PORT , () => {
+app.listen(PORT, () => {
   console.log(`app is live on ${PORT}`);
- } )
-
- 
+});

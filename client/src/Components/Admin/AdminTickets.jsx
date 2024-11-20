@@ -23,6 +23,8 @@ const AdminTickets = () => {
     empID: "",
   });
 
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   useEffect(() => {
     fetchTickets();
   }, [currentPage, filters, ticketsPerPage ]  );
@@ -39,7 +41,7 @@ const AdminTickets = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:4000/api/ticket/get-all-tickets?${query}`,
+        `${BASE_URL}ticket/get-all-tickets?${query}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -88,7 +90,7 @@ const AdminTickets = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:4000/api/ticket/update-ticket/${ticket._id}`,
+        `${BASE_URL}ticket/update-ticket/${ticket._id}`,
         {
           method: "PATCH",
           headers: {
@@ -124,7 +126,7 @@ const AdminTickets = () => {
   
         // Fetch request to delete the item
         const response = await fetch(
-          `http://localhost:4000/api/ticket/delete-ticket/${id}`,
+          `${BASE_URL}ticket/delete-ticket/${id}`,
           {
             method: "DELETE",
             headers: {

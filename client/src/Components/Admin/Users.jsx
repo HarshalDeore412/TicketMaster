@@ -9,12 +9,14 @@ function Users() {
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/user/getUsers",
+          `${BASE_URL}user/getUsers`,
           {
             method: "GET",
             headers: {
@@ -51,7 +53,7 @@ function Users() {
         throw new Error("Token not found");
       }
   
-      const response = await fetch(`http://localhost:4000/api/user/updateUser/${_id}`, {
+      const response = await fetch(`${BASE_URL}user/updateUser/${_id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +79,7 @@ function Users() {
 
   const handleDelete = async (_id) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/user/deleteUser/${_id}`, {
+      const response = await fetch(`${BASE_URL}user/deleteUser/${_id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

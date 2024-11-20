@@ -7,13 +7,15 @@ import Loader from "./Loader";
 
 const Profile = () => {
   const [user, setUser] = useState({});
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/user/get-profile-details",
+          `${BASE_URL}user/get-profile-details`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -36,7 +38,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:4000/api/user/update-profile",
+        `${BASE_URL}user/update-profile`,
         {
           method: "PUT",
           headers: {
