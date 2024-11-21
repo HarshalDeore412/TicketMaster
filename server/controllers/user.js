@@ -117,6 +117,7 @@ exports.createUser = async (req, res) => {
 // send otp
 
 exports.sendOTP = async (req, res) => {
+  console.log("OTP Request Come..")
   try {
     const { email } = req.body;
 
