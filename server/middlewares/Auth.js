@@ -35,7 +35,7 @@ exports.auth = async (req, res, next) => {
       const user = req.user;
     //   console.log('user :  ' , req )
       if (!user || user.role !== "admin") {
-        return res.status(403).json({ success: false, message: "Forbidden" });
+        return res.status(403).json({ success: false, message: "Forbidden : You Are Not Authorized to this page" });
       }
       console.log('admin Authentication done......')
       next();
