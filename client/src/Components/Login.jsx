@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Header from "./Header";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import BASE_URL from "../Assets/JSON/Base_Url.json"
 
 function Login() {
   const navigate = useNavigate();
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +21,7 @@ function Login() {
     setError(null); // Reset error on new submit attempt
 
     try {
-      const response = await fetch(`${BASE_URL}user/user-login`, {
+      const response = await fetch(`${BASE_URL.BASE_URL}user/user-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

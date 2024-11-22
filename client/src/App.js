@@ -13,7 +13,7 @@ import Error from "./Components/Error";
 
 function App() {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("user");
 
   return (
     <div className="w-[100%] animate-fade h-auto mx-auto">

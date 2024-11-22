@@ -4,10 +4,12 @@ import Logo from "../Assets/Logo/ADA.png";
 import toast from "react-hot-toast";
 import Process from "../Assets/JSON/process.json";
 import Loader from "./Loader";
+import BASE_URL from '../Assets/JSON/Base_Url.json'
+
 
 const Profile = () => {
   const [user, setUser] = useState({});
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +17,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}user/get-profile-details`,
+          `${BASE_URL.BASE_URL}user/get-profile-details`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

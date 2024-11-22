@@ -8,6 +8,8 @@ import { FaGreaterThan } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import ConfirmationPopup from "./ConfirmationPopup";
 
+import BASE_URL from '../../Assets/JSON/Base_Url.json'
+
 const AdminTickets = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ const AdminTickets = () => {
     empID: "",
   });
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     fetchTickets();
@@ -41,7 +43,7 @@ const AdminTickets = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `${BASE_URL}ticket/get-all-tickets?${query}`,
+        `${BASE_URL.BASE_URL}ticket/get-all-tickets?${query}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +92,7 @@ const AdminTickets = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `${BASE_URL}ticket/update-ticket/${ticket._id}`,
+        `${BASE_URL.BASE_URL}ticket/update-ticket/${ticket._id}`,
         {
           method: "PATCH",
           headers: {
@@ -126,7 +128,7 @@ const AdminTickets = () => {
   
         // Fetch request to delete the item
         const response = await fetch(
-          `${BASE_URL}ticket/delete-ticket/${id}`,
+          `${BASE_URL.BASE_URL}ticket/delete-ticket/${id}`,
           {
             method: "DELETE",
             headers: {

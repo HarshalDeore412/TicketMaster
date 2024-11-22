@@ -10,7 +10,6 @@ import { RxDashboard } from "react-icons/rx";
 import { IoTicketOutline } from "react-icons/io5";
 
 
-
 function Header() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [user, setUser] = useState({});

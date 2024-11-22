@@ -3,6 +3,9 @@ import TicketCard from "../Components/TicketCard";
 import Header from "./Header";
 import Loader from "./Loader";
 import { toast } from "react-hot-toast";
+import BASE_URL from '../Assets/JSON/Base_Url.json'
+
+
 
 function Tickets() {
   const [tickets, setTickets] = useState([]);
@@ -11,7 +14,7 @@ function Tickets() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ticketsPerPage, setTicketsPerPage] = useState(10);
   const [totalTickets, setTotalTickets] = useState(0);
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
   const getMyTickets = async () => {
@@ -22,7 +25,7 @@ function Tickets() {
       }
 
       const response = await fetch(
-        `${BASE_URL}user/getMyTickets?page=${currentPage}&limit=${ticketsPerPage}`,
+        `${BASE_URL.BASE_URL}user/getMyTickets?page=${currentPage}&limit=${ticketsPerPage}`,
         {
           method: "GET",
           headers: {

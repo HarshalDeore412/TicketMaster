@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Loader from "../Loader";
 import toast from "react-hot-toast";
+import BASE_URL from '../../Assets/JSON/Base_Url.json'
+
+
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -9,14 +12,14 @@ function Users() {
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          `${BASE_URL}user/getUsers`,
+          `${BASE_URL.BASE_URL}user/getUsers`,
           {
             method: "GET",
             headers: {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import BASE_URL from '../../Assets/JSON/Base_Url.json'
 async function DownloadReport() {
 
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const [filters, setFilters] = useState({
     status: "",
@@ -31,7 +31,7 @@ async function DownloadReport() {
     const token = localStorage.getItem("token"); // Replace with your token storage method
 
     const response = await fetch(
-      `${BASE_URL}ticket/download-report?${query}`,
+      `${BASE_URL.BASE_URL}ticket/download-report?${query}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

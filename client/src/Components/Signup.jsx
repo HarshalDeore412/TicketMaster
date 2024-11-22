@@ -6,7 +6,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import Loader from './Loader';
-
+import BASE_URL from '../Assets/JSON/Base_Url.json'
 
 
 
@@ -20,7 +20,7 @@ function Signup() {
     const [error, setError] = useState(null);
     const [otp, setOtp] = useState(null)
     const [loading, setLoading] = useState(false);
-    let BASE_URL = "http://192.168.1.36:4000/api/";
+
 
     console.log("BASE_URL:", BASE_URL);
     
@@ -38,7 +38,7 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const response = await fetch(`${BASE_URL}user/create-user`, {
+          const response = await fetch(`${BASE_URL.BASE_URL}user/create-user`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ function Signup() {
         if (isValidGmail(email)) {
             setLoading(true);
             try {
-                const response = await fetch(`${BASE_URL}user/send-otp`, {
+                const response = await fetch(`${BASE_URL.BASE_URL}user/send-otp`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
