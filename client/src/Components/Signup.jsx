@@ -20,9 +20,6 @@ function Signup() {
     const [error, setError] = useState(null);
     const [otp, setOtp] = useState(null)
     const [loading, setLoading] = useState(false);
-
-
-    console.log("BASE_URL:", BASE_URL);
     
 
     const [isOTPAvailable, setIsOTPAvailable] = useState(false)

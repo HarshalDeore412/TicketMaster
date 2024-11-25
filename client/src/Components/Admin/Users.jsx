@@ -28,7 +28,11 @@ function Users() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ role: selectedUser.role }),
+          body: JSON.stringify({
+            role: selectedUser.role,
+            firstName: selectedUser.firstName,
+            lastName: selectedUser.lastName,
+          }),
         }
       );
 
@@ -61,39 +65,42 @@ function Users() {
 
   const handleDelete = async (_id) => {
     try {
-      const response = await fetch(`${BASE_URL.BASE_URL}user/deleteUser/${_id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-  
-      if (!response.ok) {
-        if (response.status === 401) {
-          toast.error("Unauthorized access");
-        }else if(response.status === 400){
-          toast.error(response.message)
-        } else if (response.status === 404) {
-          toast.error("User not found");
-        } else if (response.status === 500) {
-          toast.error("Internal Server Error");
-        } else {
-          const errorMessage = await response.json();
-          toast.error(errorMessage.error);
+      const response = await fetch(
+        `${BASE_URL.BASE_URL}user/deleteUser/${_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
+      );
+
+      console.log(" response : ", response);
+
+      if (!response.ok) {
+        const errorMessage =
+          response.status === 401 ||
+          response.status === 400 ||
+          response.status === 404 ||
+          response.status === 403 ||
+          response.status === 500
+            ? response.statusText
+            : (await response.json()).error;
+
+        toast.error(errorMessage);
         return;
       }
-  
+
       console.log(response);
       setDeleteModal(false);
       toast.success("User deleted successfully!");
     } catch (error) {
       setError(error.message);
+      setupdate((prev) => prev + 1);
       toast.error(error.message);
     }
   };
-  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -126,28 +133,6 @@ function Users() {
     };
     fetchUsers();
   }, [update]);
-
-  // const handleChangeRole = async (user) => {
-  //   try {
-  //     const response = await fetch(`/api/users/${user.id}/role`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //       body: JSON.stringify({ role: user.role }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(await response.text());
-  //     }
-
-  //     setUpdateModal(false);
-  //     window.location.reload();
-  //   } catch (error) {
-  //     setError(error.message);
-  //   }
-  // };
 
   return (
     <div>
@@ -220,12 +205,33 @@ function Users() {
               className="space-y-4"
             >
               <div>
-                <label className="block text-sm font-medium mb-2">Name:</label>
+                <label className="block text-sm font-medium mb-2">
+                  First Name:
+                </label>
                 <input
                   type="text"
-                  value={selectedUser.name}
+                  value={selectedUser.firstName}
                   onChange={(e) =>
-                    setSelectedUser({ ...selectedUser, name: e.target.value })
+                    setSelectedUser({
+                      ...selectedUser,
+                      firstName: e.target.value,
+                    })
+                  }
+                  className="block w-full rounded-lg border border-gray-300 p-3 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Last Name:
+                </label>
+                <input
+                  type="text"
+                  value={selectedUser.lastName}
+                  onChange={(e) =>
+                    setSelectedUser({
+                      ...selectedUser,
+                      lastName: e.target.value,
+                    })
                   }
                   className="block w-full rounded-lg border border-gray-300 p-3 focus:ring-indigo-500 focus:border-indigo-500"
                 />
