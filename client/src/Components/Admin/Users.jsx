@@ -124,6 +124,7 @@ function Users() {
           }
         } else {
           console.error("Error retrieving users:", data.message);
+          toast.error(data.message)
           setLoading(false);
         }
       } catch (error) {

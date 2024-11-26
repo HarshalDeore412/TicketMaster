@@ -68,6 +68,8 @@ const AdminTickets = () => {
       }
     } catch (error) {
       console.error("Failed to fetch tickets:", error);
+      toast.error(error.message)
+
     } finally {
       setLoading(false);
     }
@@ -249,7 +251,7 @@ const AdminTickets = () => {
           </div>
         </div>
         {loading ? (
-          <div> {<Loader />} </div>
+          <div className="w-screen flex justiy-center items-center" > {<Loader />} </div>
         ) : (
           <div className="overflow-x-auto w-full h-screen mx-auto p-2  ">
             <table className="table-auto border w-full text-left">
