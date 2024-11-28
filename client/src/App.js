@@ -16,7 +16,7 @@ function App() {
   const user = localStorage.getItem("user");
 
   return (
-    <div className="w-[100%] animate-fade h-auto mx-auto">
+    <div className="w-[100%]  bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white animate-fade h-auto mx-auto">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

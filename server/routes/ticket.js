@@ -3,8 +3,11 @@ const express = require('express');
 const router = express.Router();
 const Ticket = require('../controllers/ticket');
 const { auth , isAdmin } = require("../middlewares/Auth");
+const multer = require("multer");
+const upload = require('../middlewares/upload')
 
-router.post("/create-ticket"  ,auth, Ticket.createTicket);
+
+router.post("/create-ticket"  ,auth, upload.single('image') , Ticket.createTicket);
 router.get("/get-all-tickets",auth , isAdmin ,Ticket.getAllTickets);
 router.get("/get-ticket-by-id/:id",auth , Ticket.getTicketById);
 router.patch("/update-ticket/:_id" ,auth, isAdmin, Ticket.updateTicket );

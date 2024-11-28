@@ -38,9 +38,9 @@ const PopUpButton = () => {
         <div className="flex justify-center">
             <button
                 onClick={handlePopupClick}
-                className="bg-red-500 flex justify-center items-center gap-2 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                className="inline-block mx-2 rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
             >
-                <p>Logout</p> <GrLogout />
+                <p>Logout</p>
 
             </button>
 

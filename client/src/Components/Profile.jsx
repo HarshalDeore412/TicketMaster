@@ -4,16 +4,16 @@ import Logo from "../Assets/Logo/ADA.png";
 import toast from "react-hot-toast";
 import Process from "../Assets/JSON/process.json";
 import Loader from "./Loader";
-import BASE_URL from '../Assets/JSON/Base_Url.json'
-
+import BASE_URL from "../Assets/JSON/Base_Url.json";
 
 const Profile = () => {
   const [user, setUser] = useState({});
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true)
     const fetchUser = async () => {
       try {
         const response = await fetch(
@@ -39,17 +39,14 @@ const Profile = () => {
     toast.success("We are under maintenance");
     e.preventDefault();
     try {
-      const response = await fetch(
-        `${BASE_URL}user/update-profile`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(user),
-        }
-      );
+      const response = await fetch(`${BASE_URL}user/update-profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(user),
+      });
       if (response.ok) {
       } else {
         console.error("Failed to update profile");
@@ -66,8 +63,8 @@ const Profile = () => {
   if (loading)
     return (
       <div>
-        {" "}
-        <Loader />{" "}
+
+        <Loader />
       </div>
     );
 
@@ -81,64 +78,46 @@ const Profile = () => {
           <img src={Logo} alt="Profile" className="object-cover rounded-full" />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6 mb-10">
+      <div className="grid text-white grid-cols-2 gap-6 mb-10">
         <div className="relative">
           <input
             type="text"
             name="firstName"
             id="floating_outlined_firstName"
-            className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+            className="block w-full bg-transparent text-sm h-[50px] px-4  rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
             placeholder="First name"
             value={user.firstName || ""}
             onChange={handleChange}
           />
-          <label
-            htmlFor="floating_outlined_firstName"
-            className="peer-placeholder-shown:-z-10 peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-          >
-            First name
-          </label>
         </div>
         <div className="relative">
           <input
             type="text"
             name="lastName"
             id="floating_outlined_lastName"
-            className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+            className="block w-full text-sm h-[50px] bg-transparent px-4 rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
             placeholder="Last name"
             value={user.lastName || ""}
             onChange={handleChange}
           />
-          <label
-            htmlFor="floating_outlined_lastName"
-            className="peer-placeholder-shown:-z-10 peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-          >
-            Last name
-          </label>
         </div>
         <div className="relative">
           <input
             type="text"
             name="empID"
             id="floating_outlined_empID"
-            className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+            className="block w-full text-sm bg-transparent h-[50px] px-4  rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
             placeholder="Employee ID"
             value={user.empID || ""}
             onChange={handleChange}
           />
-          <label
-            htmlFor="floating_outlined_empID"
-            className="peer-placeholder-shown:-z-10 peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-          >
-            Employee ID
-          </label>
         </div>
         <div className="grid grid-cols-2 gap-6 mb-10">
           <div className="relative">
             <select
               name="process"
               id="floating_outlined_process"
-              className="block w-full text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+              className="block w-full text-sm h-[50px] bg-transparent px-4  rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
               value={user.process || ""}
               onChange={handleChange}
             >
@@ -146,17 +125,15 @@ const Profile = () => {
                 Select process
               </option>
               {Process.map((option) => (
-                <option key={option.id} value={option.name}>
+                <option
+                  className="bg-transparent text-black"
+                  key={option.id}
+                  value={option.name}
+                >
                   {option.name}
                 </option>
               ))}
             </select>
-            <label
-              htmlFor="floating_outlined_process"
-              className="peer-placeholder-shown:-z-10 peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-            >
-              Process
-            </label>
           </div>
         </div>
         <div className="relative cursor-not-allowed	 ">
@@ -164,35 +141,23 @@ const Profile = () => {
             type="email"
             name="email"
             id="floating_outlined_email"
-            className="block w-full cursor-not-allowed	 text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+            className="block w-full cursor-not-allowed	 text-sm h-[50px] px-4  rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
             placeholder="E-mail"
             value={user.email || ""}
             disabled
           />
-          <label
-            htmlFor="floating_outlined_email"
-            className="peer-placeholder-shown:-z-10 peer-focus:z-10 cursor-not-allowed	 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-          >
-            E-mail
-          </label>
         </div>
         <div className="relative">
           <input
             type="text"
             name="role"
             id="floating_outlined_role"
-            className="block w-full cursor-not-allowed	 text-sm h-[50px] px-4 text-slate-900 bg-white rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
+            className="block w-full cursor-not-allowed	 text-sm h-[50px] px-4  rounded-[8px] border border-violet-200 focus:border-transparent focus:outline focus:outline-2 focus:outline-primary focus:ring-0 hover:border-brand-500 peer"
             placeholder="Role"
             value={user.role || ""}
             onChange={handleChange}
             disabled
           />
-          <label
-            htmlFor="floating_outlined_role"
-            className="peer-placeholder-shown:-z-10 cursor-not-allowed	     peer-focus:z-10 absolute text-[14px] leading-[150%] text-primary peer-focus:text-primary duration-300 transform -translate-y-[1.2rem] scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-[1.2rem]"
-          >
-            Role
-          </label>
         </div>
       </div>
       <div className="sm:flex sm:flex-row-reverse flex gap-4">

@@ -7,8 +7,9 @@ import { FaLessThan } from "react-icons/fa";
 import { FaGreaterThan } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import ConfirmationPopup from "./ConfirmationPopup";
-
-import BASE_URL from '../../Assets/JSON/Base_Url.json'
+import BASE_URL from "../../Assets/JSON/Base_Url.json";
+import { CiImageOn } from "react-icons/ci";
+import { MdOutlineImageNotSupported } from "react-icons/md";
 
 const AdminTickets = () => {
   const [tickets, setTickets] = useState([]);
@@ -18,6 +19,8 @@ const AdminTickets = () => {
   const [totalTickets, setTotalTickets] = useState(0);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [downlaodLoading , setDownloadLoading] = useState(false)
+
   const [filters, setFilters] = useState({
     status: "",
     startDate: "",
@@ -29,7 +32,7 @@ const AdminTickets = () => {
 
   useEffect(() => {
     fetchTickets();
-  }, [currentPage, filters, ticketsPerPage ]  );
+  }, [currentPage, filters, ticketsPerPage]);
 
   const fetchTickets = useCallback(async () => {
     setLoading(true);
@@ -68,8 +71,7 @@ const AdminTickets = () => {
       }
     } catch (error) {
       console.error("Failed to fetch tickets:", error);
-      toast.error(error.message)
-
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -123,11 +125,14 @@ const AdminTickets = () => {
 
   const handleDeleteById = async (id) => {
     try {
+
       // Ask for user confirmation
-      const userConfirmed = window.confirm("Are you sure you want to delete this?");
+      const userConfirmed = window.confirm(
+        "Are you sure you want to delete this?"
+      );
       if (userConfirmed) {
         console.log("Confirmed! Executing delete function...");
-  
+
         // Fetch request to delete the item
         const response = await fetch(
           `${BASE_URL.BASE_URL}ticket/delete-ticket/${id}`,
@@ -139,12 +144,11 @@ const AdminTickets = () => {
             },
           }
         );
-  
+
         console.log(response.status);
-  
+
         if (response.ok) {
           toast.success("Ticket Deleted Successfully");
-          
         } else {
           console.error("Failed to delete the item");
           toast.error("Failed to delete the item");
@@ -155,10 +159,11 @@ const AdminTickets = () => {
       toast.error("Error deleting the item");
     }
   };
-  
 
   const downloadReport = async () => {
     try {
+      setDownloadLoading(true)
+
       const query = new URLSearchParams({
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -187,6 +192,9 @@ const AdminTickets = () => {
       document.body.appendChild(a);
       a.click();
       a.remove();
+
+      setDownloadLoading(false)
+
     } catch (error) {
       console.error("Failed to download report:", error);
     }
@@ -202,56 +210,63 @@ const AdminTickets = () => {
   }
 
   return (
-    <div className="h-full flex animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in justify-center">
+    <div className="h-full  text-white flex animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in justify-center">
       <div className="h-full w-[100%] pt-2 text-center mx-auto">
         <div className="h-full flex justify-center">
           <div className="h-full w-[100%] pt-2 text-center mx-auto">
-            <div className="filters flex flex-col md:flex-row items-center justify-around bg-indigo-500 text-white p-1 rounded-lg shadow-lg mb-2">
+            <div className="filters flex flex-col border-b border-red-700  md:flex-row items-center justify-around text-white bg-transparent p-1 rounded-lg shadow-lg mb-2">
               <input
                 type="text"
                 name="empID"
                 placeholder="Filter by Employee ID"
                 value={filters.empID}
                 onChange={handleFilterChange}
-                className="filter-input bg-white text-gray-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+                className="filter-input bg-transparent placeholder:text-white border border-current px-8 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
               />
               <select
                 name="status"
                 value={filters.status}
                 onChange={handleFilterChange}
-                className="filter-select bg-white text-gray-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+                className="filter-select bg-transparent border border-current px-8 text-black-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
               >
-                <option value=""> All </option>
-                <option value="Open">Open</option>
-                <option value="Processing">Processing</option>
-                <option value="Closed">Closed</option>
+                <option className="text-black bg-yellow-200" value=""> All </option>
+                <option className="text-black bg-yellow-200" value="Open">Open</option>
+                <option className="text-black bg-yellow-200" value="Processing">Processing</option>
+                <option className="text-black bg-yellow-200" value="Closed">Closed</option>
               </select>
               <input
                 type="date"
                 name="startDate"
                 value={filters.startDate}
                 onChange={handleFilterChange}
-                className="filter-input bg-white text-gray-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+                className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
               />
               <input
                 type="date"
                 name="endDate"
                 value={filters.endDate}
                 onChange={handleFilterChange}
-                className="filter-input bg-white text-gray-800 rounded-lg px-4 py-2 mb-2 md:mb-0 shadow-md"
+                className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 shadow-md"
               />
+
               <button
                 onClick={downloadReport}
-                className="bg-green-500 flex justify-center items-center hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+                className="inline-block bg-transparent flex py-2 rounded border border-current px-8  text-sm font-medium text-white-600 transition hover:-rotate-2 hover:scale-110 focus:outline-none focus:ring active:text-white-500"
               >
                 <span className="mr-2">Download</span>
-                <MdDownload className="text-2xl" />
+                {
+                  downlaodLoading ? (<div> <div className="..."> </div> </div>) : (<MdDownload className="text-2xl" />)
+                }
+
               </button>
             </div>
           </div>
         </div>
         {loading ? (
-          <div className="w-screen flex justiy-center items-center" > {<Loader />} </div>
+          <div className="w-screen flex justiy-center items-center">
+            {" "}
+            {<Loader />}{" "}
+          </div>
         ) : (
           <div className="overflow-x-auto w-full h-screen mx-auto p-2  ">
             <table className="table-auto border w-full text-left">
@@ -261,6 +276,7 @@ const AdminTickets = () => {
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Emp ID</th>
                   <th className="px-4 py-2">Issue</th>
+                  <th className="px-4 py-2">files</th>
                   <th className="px-4 py-2">Description</th>
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Date</th>
@@ -274,7 +290,7 @@ const AdminTickets = () => {
                 {tickets.map((ticket, index) => (
                   <tr
                     key={ticket._id}
-                    className="border-b border-gray-200 hover:bg-gray-100"
+                    className="border-b border-gray-200 hover:text-black hover:bold hover:bg-gray-100"
                     style={{
                       animation: `fadeIn 0.5s ease-in-out ${
                         index * 0.2
@@ -282,10 +298,21 @@ const AdminTickets = () => {
                       opacity: 0,
                     }}
                   >
-                    <td className="px-4 py-2">{ticket.deskNo}</td>
+                    <td className="px-4 py-2">{ticket.deskNo} </td>
                     <td className="px-4 py-2">{ticket.name}</td>
                     <td className="px-4 py-2">{ticket.empID}</td>
                     <td className="px-4 py-2">{ticket.issue}</td>
+                    <td className="px-4 py-2">
+                      {ticket.Image ? (
+                        <a target="_blank" href={ticket.Image}>
+                          <CiImageOn />
+                        </a>
+                      ) : (
+                        <div>
+                          <MdOutlineImageNotSupported />
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-2">{ticket.description}</td>
                     <td className="px-4 py-2">
                       {ticket.status === "Open" ? (
@@ -332,12 +359,19 @@ const AdminTickets = () => {
             <div className="pagination flex justify-between items-center px-10 mt-4 space-x-2">
               <div>
                 <select
+                  className="bg-transparent"
                   value={ticketsPerPage}
                   onChange={handleTicketsPerPageChange}
                 >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
+                  <option className="bg-transparent" value="5">
+                    5
+                  </option>
+                  <option className="bg-transparent" value="10">
+                    10
+                  </option>
+                  <option className="bg-transparent" value="20">
+                    20
+                  </option>
                 </select>
               </div>
               <div className="flex justify-center mt-4 space-x-2">
@@ -410,14 +444,14 @@ const AdminTickets = () => {
               transform: "translate(-50%, -50%)",
               width: "90%",
               maxWidth: "600px",
-              padding: "20px",
+              padding: "5px",
               border: "none",
               borderRadius: "15px",
               boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
             },
           }}
         >
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-blue-100 text-black rounded-lg shadow-lg p-6">
             <h2 className="text-2xl text-center border-b-2 pb-4 border-indigo-500 font-bold text-gray-800 mb-6">
               Update Ticket
             </h2>

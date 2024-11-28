@@ -3,9 +3,9 @@ import TicketCard from "../Components/TicketCard";
 import Header from "./Header";
 import Loader from "./Loader";
 import { toast } from "react-hot-toast";
-import BASE_URL from '../Assets/JSON/Base_Url.json'
-
-
+import BASE_URL from "../Assets/JSON/Base_Url.json";
+import { IoTicketOutline } from "react-icons/io5";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Tickets() {
   const [tickets, setTickets] = useState([]);
@@ -14,8 +14,8 @@ function Tickets() {
   const [currentPage, setCurrentPage] = useState(1);
   const [ticketsPerPage, setTicketsPerPage] = useState(10);
   const [totalTickets, setTotalTickets] = useState(0);
+  const navigate = useNavigate()
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
-
 
   const getMyTickets = async () => {
     try {
@@ -34,15 +34,6 @@ function Tickets() {
           },
         }
       );
-
-      if (!response.ok) {
-
-        if(response.status === 404){
-          throw new Error(`You Dont Have Tickets`)
-        }
-
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
       const data = await response.json();
       console.log(data);
@@ -78,27 +69,26 @@ function Tickets() {
       <div>
         <Header />
       </div>
-      <div className=" mx-auto w-[80%]">
-        <h1 className="text-2xl text-center p-4">Ticket List</h1>
+      <div className=" h-screen mx-auto w-[80%]">
         {loading ? (
           <Loader />
         ) : error ? (
           <p className="text-xl p-4">{error}</p>
         ) : tickets && tickets.length > 0 ? (
-         
-            <div className="flex  w-[100%] h-screen flex-wrap overflow-y-auto">
-              {tickets.map((ticket) => (
-                <TicketCard
-                  key={ticket.id}
-                  ticket={ticket}
-                  className="w-1/3 p-2"
-                />
-              ))}
-            
-            <div className="w-full">
-              <div className="flex justify-between h-10 pt-10 bottom-5">
+          <div className="flex  w-[100%] h-screen flex-wrap overflow-y-auto">
+            <h1 className="text-2xl text-center p-4">Ticket List</h1>
+            {tickets.map((ticket) => (
+              <TicketCard
+                key={ticket.id}
+                ticket={ticket}
+                className="w-1/3 p-2"
+              />
+            ))}
+
+            <div className="w-full bg-transparent text-white">
+              <div className="flex  justify-between h-10 pt-10 bottom-5">
                 {/* Items per page */}
-                <div className="gap-2">
+                <div className="gap-2 bg-transparent text-black ">
                   <select
                     value={ticketsPerPage}
                     onChange={handleTicketsPerPageChange}
@@ -134,10 +124,23 @@ function Tickets() {
             </div>
           </div>
         ) : (
-          <p className="text-xl p-4">
-            You don't have any tickets. But you can raise one if you're having
-            any issues.
-          </p>
+          <div className="grid h-screen place-content-top mt-36 bg-transparent px-4">
+            <div className="text-center ">
+              <div className="flex flex-col" >
+                <div className="mx-auto text-9xl " > <IoTicketOutline /> </div>
+                <h1 className="text-7xl font-black  text-shadow shadow-cyan-500/50 text-gray-200">
+                  No Tickets Available
+                </h1>
+              </div>
+
+              <div
+                onClick={() => { navigate('/')}}
+                className="mt-6 inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring"
+              >
+                Create Ticket
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

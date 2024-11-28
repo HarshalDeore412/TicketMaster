@@ -4,31 +4,76 @@ const mongoose = require("mongoose");
 const { createObjectCsvWriter } = require("csv-writer");
 const fs = require("fs");
 const path = require("path");
-const { ObjectId } = require("mongodb");
+const cloudinary = require("cloudinary").v2;
 
-// Create Ticket
+async function uploadImageToCloudinary(file) {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          folder: "tickets",
+          public_id: Date.now() + "-" + file.originalname,
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result.secure_url);
+          }
+        }
+      )
+      .end(file.buffer);
+  });
+}
+
 exports.createTicket = async (req, res) => {
+  console.log("Request for creating ticket received");
+  console.log("Request body:", req.file);
+
   try {
     const { deskNo, issue, description } = req.body;
 
-    // Validate input
+    // Validate input fields
     if (!deskNo || !issue || !description) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message: "Please fill in all fields",
       });
+    }
+
+    if (
+      typeof deskNo !== "string" ||
+      typeof issue !== "string" ||
+      typeof description !== "string"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid input type",
+      });
+    }
+
+    let imageUrl = null;
+
+    if (req.file) {
+      try {
+        imageUrl = await uploadImageToCloudinary(req.file);
+      } catch (uploadError) {
+        console.error("Cloudinary upload error:", uploadError);
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload image to Cloudinary",
+          error: uploadError.message,
+        });
+      }
     }
 
     // Get user ID from request
     const empID = req.user.empID;
-    console.log("User:", req.user);
 
     // Find user by empID
     const user = await User.findOne({ empID });
 
-    console.log("User:", user);
-
-    // Check if user exists
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -37,7 +82,7 @@ exports.createTicket = async (req, res) => {
     }
 
     // Create ticket
-    const ticket = await Ticket.create({
+    const ticket = new Ticket({
       empID: user.empID,
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
@@ -45,7 +90,10 @@ exports.createTicket = async (req, res) => {
       deskNo,
       issue,
       description,
+      Image: imageUrl,
     });
+
+    await ticket.save();
 
     console.log("Ticket created successfully:", ticket);
 
@@ -55,6 +103,7 @@ exports.createTicket = async (req, res) => {
       ticket,
     });
   } catch (error) {
+    console.error("Server error:", error);
     // Handle specific errors
     if (error.name === "ValidationError") {
       return res.status(400).json({
@@ -378,7 +427,7 @@ exports.getMyTickets = async (req, res) => {
     if (!myTickets || myTickets.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "You have not raised any tickets yet.",
+        message: "You Dont Have Tickets",
       });
     }
 

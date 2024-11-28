@@ -34,57 +34,84 @@ function Header() {
   };
 
   return (
-    <nav className="bg-white p-2 w-full mx-auto text-blue body-font border-b-4 border-indigo-500 md:flex md:justify-between md:items-center shadow-md">
-      <div className="flex justify-between items-center md:mb-0 p-4 md:p-0">
-        <div className="flex items-center gap-5">
-          <Link to="/" className="flex title-font font-medium items-center text-indigo-600 mb-4 md:mb-0">
-            <img src={ADALogo} alt="TicketMaster" className="h-10 w-15" />
-          </Link>
-          <p className="text-2xl font-semibold text-indigo-600 animate-fadeInUp">
-            {localStorage.getItem("user") ? `Hi ${user.firstName}` : ""}
-          </p>
-        </div>
-        <button
-          className="md:hidden bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
-          onClick={handleToggleMobileNav}
-        >
-          {isMobileNavOpen ? <RxCross2 className="text-2xl" /> : <CiMenuBurger className="text-2xl" />}
-        </button>
-      </div>
-      <div
-        className={`md:flex md:ml-auto md:items-center md:text-base md:justify-center ${isMobileNavOpen ? "block" : "hidden"} bg-white w-full md:w-auto p-4 md:p-0 border-t-4 border-indigo-500 md:border-none transition duration-300 ease-in-out`}
-      >
-        {role === "user" ? (
-          <Link to="/tickets" className="mr-5 text-xl flex justify-center items-center gap-2 hover:text-gray-400 text-indigo-600 transition duration-300 ease-in-out">
-            <p>Tickets</p> <IoTicketOutline />
-          </Link>
-        ) : role === "admin" ? (
-          <Link to="/admin/dashboard" className="mr-5 border-2 border-indigo-500 p-2 flex items-center space-x-2 text-lg font-semibold text-indigo-600 hover:text-indigo-400 transition duration-300 ease-in-out transform hover:scale-105 rounded-lg shadow-md hover:shadow-lg">
-            <span>Dashboard</span>
-            <RxDashboard className="text-2xl" />
-          </Link>
-        ) : null}
-        {localStorage.getItem("token") ? (
-          <div className="mr-5">
-            <PopUpButton />
+<nav className=" p-4 border-1 border-b border-r border-red-500  w-full shadow-md">
+  <div className="max-w-7xl mx-auto flex justify-between items-center">
+    <Link to="/" className="flex items-center text-white">
+      <img src={ADALogo} alt="TicketMaster" className="h-12 w-auto" />
+      <span className="ml-3 text-2xl font-semibold">
+        {localStorage.getItem("user")
+          ? `Hi, ${user.firstName?.charAt(0).toUpperCase() + user.firstName?.slice(1).toLowerCase()}`
+          : ""}
+      </span>
+    </Link>
+    <div className="hidden md:flex space-x-6 items-center">
+      {role === "user" && (
+        <Link to="/tickets" className="flex items-center text-white hover:text-gray-300 transition duration-300">
+          Tickets <IoTicketOutline className="ml-1" />
+        </Link>
+      )}
+      {role === "admin" && (
+        <Link to="/admin/dashboard" className="flex items-center bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-transparent hover:text-white border border-white transition duration-300">
+          Dashboard <RxDashboard className="ml-2" />
+        </Link>
+      )}
+      {localStorage.getItem("token") ? (
+        <PopUpButton className="mr-4 text-white" />
+      ) : (
+        <Link to="/login" className="text-white hover:text-gray-300 transition duration-300">
+          Login
+        </Link>
+      )}
+      {localStorage.getItem("token") ? (
+        <Link to="/profile" className="flex items-center text-white hover:text-gray-300 transition duration-300">
+          <CgProfile className="text-2xl" />
+        </Link>
+      ) : (
+        <Link to="/signup" className="text-white hover:text-gray-300 transition duration-300">
+          Signup
+        </Link>
+      )}
+    </div>
+    <button
+      className="md:hidden bg-white text-indigo-600 p-2 rounded focus:outline-none"
+      onClick={handleToggleMobileNav}
+    >
+      {isMobileNavOpen ? <RxCross2 className="text-2xl" /> : <CiMenuBurger className="text-2xl" />}
+    </button>
+  </div>
+  {isMobileNavOpen && (
+    <div className="md:hidden mt-4 space-y-4 text-center">
+      {role === "user" && (
+        <Link to="/tickets" className="block text-white hover:text-gray-300 transition duration-300">
+          Tickets <IoTicketOutline className="ml-1 inline-block" />
+        </Link>
+      )}
+      {role === "admin" && (
+        <Link to="/admin/dashboard" className="block bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-transparent hover:text-white border border-white transition duration-300">
+          Dashboard <RxDashboard className="ml-2 inline-block" />
+        </Link>
+      )}
+      {localStorage.getItem("token") ? (
+        <PopUpButton className="block text-white" />
+      ) : (
+        <Link to="/login" className="block text-white hover:text-gray-300 transition duration-300">
+          Login
+        </Link>
+      )}
+      {localStorage.getItem("token") ? (
+        <Link to="/profile" className="block text-white hover:text-gray-300 transition duration-300">
+          <CgProfile className="h-10   text-black inline-block" />
+        </Link>
+      ) : (
+        <Link to="/signup" className="block text-white hover:text-gray-300 transition duration-300">
+          Signup
+        </Link>
+      )}
+    </div>
+  )}
+</nav>
 
-          </div>
-        ) : (
-          <Link to="/login" className="mr-5 hover:text-gray-400 text-indigo-600 transition duration-300 ease-in-out">
-            Login
-          </Link>
-        )}
-        {localStorage.getItem("token") ? (
-          <Link to="/profile" className="mr-1 flex items-center space-x-2 text-lg font-semibold text-indigo-600 hover:text-indigo-400 transition duration-300 ease-in-out transform hover:scale-105 rounded-lg shadow-md hover:shadow-lg">
-            <CgProfile className="text-indigo-500 text-5xl" />
-          </Link>
-        ) : (
-          <Link to="/signup" className="hover:text-gray-400 text-indigo-600 transition duration-300 ease-in-out">
-            Signup
-          </Link>
-        )}
-      </div>
-    </nav>
+
   );
 }
 

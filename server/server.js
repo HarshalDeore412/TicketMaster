@@ -4,6 +4,8 @@ const PORT = process.env.PORT || 4000;
 const DBConnect = require("./config/dbConfig.js");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
+const path = require('path');
+const cloudinaryConnect = require('./config/cloudinaryConfig.js')
 
 // Add routes
 const userRoutes = require("./routes/user.js");
@@ -11,8 +13,10 @@ const ticketRoutes = require("./routes/ticket.js");
 
 // Database connection
 DBConnect();
+cloudinaryConnect();
 
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configure and apply CORS middleware
 const corsOptions = {

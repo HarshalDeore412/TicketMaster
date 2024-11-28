@@ -25,6 +25,9 @@ const ticketSchema = new mongoose.Schema({
   },
 
   empID: { type: Number, required: true },
+  Image : {
+    type : String,
+  }
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

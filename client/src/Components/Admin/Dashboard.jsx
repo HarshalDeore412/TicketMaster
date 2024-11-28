@@ -4,6 +4,10 @@ import Modal from "react-modal";
 import Users from "./Users";
 import AdminTicket from "./AdminTickets"
 import BASE_URL from '../../Assets/JSON/Base_Url.json'
+import { CiImageOn } from "react-icons/ci";
+
+
+
 Modal.setAppElement("#root");
 
 function Dashboard() {
@@ -14,35 +18,33 @@ function Dashboard() {
 
  
   return (
-    <div className=" animate-once animate-ease-linear w-[80%] mx-auto">
-      <Header />
-      <div className=" mx-auto pt-5 flex justify-center">
-        <div className="flex items-center">
-          <button
-            className={`${
-              toggle ? "bg-indigo-700" : "bg-indigo-500"
-            } w-[100%] text-white font-bold py-2 px-4 rounded-l-lg`}
-            onClick={() => setToggle(false)}
-          >
-            Users
-          </button>
-          <button
-            className={`${
-              toggle ? "bg-indigo-500" : "bg-indigo-700"
-            } w-[100%] text-white font-bold py-2 px-4 rounded-r-lg`}
-            onClick={() => setToggle(true)}
-          >
-            Tickets
-          </button>
-        </div>
-      </div>
+<div className="w-full max-w-7xl mx-auto p-4">
+  <Header />
+  <div className="flex justify-center py-5"> 
+  <div className="flex items-center"> 
+    <button 
+      className={`${!toggle ? "bg-yellow-200 " : "bg-transparent border-1 border-l border-r border-yellow-300  "} w-1/2 m-1 text-black font-bold py-2 px-4 rounded-lg focus:outline-none  focus:ring-indigo-100`}
+      onClick={() => setToggle(false)}
+    > 
+      Users 
+    </button> 
+    <button 
+      className={`${toggle ? "bg-yellow-200 " : "bg-transparent border-1 border-l border-r border-yellow-300  "} w-1/2 m-1 text-black font-bold py-2 px-4 rounded-lg focus:outline-none  focus:ring-indigo-100`}
+      onClick={() => setToggle(true)}
+    > 
+      Tickets 
+    </button> 
+  </div> 
+</div>
 
-      {toggle ? (
-        <div className="w-full mx-auto ">{<AdminTicket />}</div>
-      ) : (
-        <div className="w-full h-full mx-auto ">{<Users />}</div>
-      )}
-    </div>
+
+  {toggle ? (
+    <div className="w-full">{<AdminTicket />}</div>
+  ) : (
+    <div className="w-full h-full">{<Users />}</div>
+  )}
+</div>
+
   );
 }
 

@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Header from "./Header";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import BASE_URL from "../Assets/JSON/Base_Url.json"
+import BASE_URL from "../Assets/JSON/Base_Url.json";
+import axios from 'axios'
 
 function Login() {
   const navigate = useNavigate();
-
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [passVisible, setPassVisible] = useState(false);
+  const [publicIP , setPublicIP] = useState('');
 
   const toggleVisible = () => setPassVisible(!passVisible);
 
@@ -45,6 +45,16 @@ function Login() {
     }
   };
 
+  useEffect(() => {
+    const fetchIP = async () => {
+      const response = await axios.get("https://api.ipify.org?format=json");
+      setPublicIP(response.data.ip);
+      console.log("Public IP : " , publicIP)
+    };
+
+    fetchIP()
+  });
+
   return (
     <div className="w-[80%] mx-auto">
       <div>
@@ -52,14 +62,14 @@ function Login() {
       </div>
 
       <div className="flex justify-center items-center h-screen">
-        <div className="max-w-md p-4 md:p-6 lg:p-8 bg-white border-y-4 border-indigo-500 rounded-lg shadow-md">
+        <div className="max-w-md p-4 md:p-6 lg:p-8 ring-2 ring-purple-850 ring-offset-2 ring-offset-slate-850 rounded-lg shadow-md">
           <h2 className="text-lg font-bold mb-4">Login</h2>
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded-lg">
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 text-white">
             <div>
               <label className="block text-sm font-medium mb-2" htmlFor="email">
                 Email:
@@ -70,11 +80,14 @@ function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="block bg-transparent w-full p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2" htmlFor="password">
+              <label
+                className="block bold text-sm font-medium mb-2"
+                htmlFor="password"
+              >
                 Password:
               </label>
               <div className="flex justify-between items-center">
@@ -84,7 +97,7 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="block w-[80%] p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <div onClick={toggleVisible} className="ml-2 cursor-pointer">
                   {passVisible ? <FaEye /> : <FaEyeSlash />}

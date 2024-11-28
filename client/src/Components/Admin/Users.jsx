@@ -136,9 +136,8 @@ function Users() {
   }, [update]);
 
   return (
-    <div>
-      <div className="h-screen text-center mx-auto w-[80%]">
-        <h1 className="text-2xl p-4 text-indigo-500">Users List</h1>
+    <div className="" >
+      <div className="h-screen text-white text-center mx-auto w-[80%]">
         {loading ? (
           <Loader />
         ) : (
@@ -156,7 +155,7 @@ function Users() {
               {users.map((user, index) => (
                 <tr
                   key={user._id}
-                  className="border-b border-indigo-200 hover:bg-indigo-50"
+                  className="border-b hover:text-black  border-indigo-200 hover:bg-indigo-50"
                   style={{
                     animation: `fadeIn 0.5s ease-in-out ${
                       index * 0.2
@@ -196,7 +195,7 @@ function Users() {
       </div>
       {updateModal && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-in-out">
-          <div className="bg-white rounded-lg shadow-xl p-8 w-3/4 max-w-lg">
+          <div className="bg-blue-100 text-black rounded-lg shadow-xl p-8 w-3/4 max-w-lg">
             <h2 className="text-2xl text-center font-bold mb-6">Update User</h2>
             <form
               onSubmit={(e) => {
@@ -271,7 +270,7 @@ function Users() {
 
       {deleteModal && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-xl p-8 w-1/2">
+          <div className="bg-blue-100 text-black rounded-lg shadow-xl p-8 w-1/2">
             <h2 className="text-2xl font-bold mb-4">Delete User</h2>
             <p className="text-lg mb-4">
               Are you sure you want to delete {selectedUser.name}?
