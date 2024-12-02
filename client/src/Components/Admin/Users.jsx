@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import Loader from "../Loader";
 import toast from "react-hot-toast";
 import BASE_URL from "../../Assets/JSON/Base_Url.json";
+import { CgProfile } from "react-icons/cg";
 
 function Users() {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
-  const [update, setupdate] = useState(1);
+  const [update, setUpdate] = useState(1);
+  const [search, setSearch] = useState("");
 
   const handleUpdate = async (_id, userData) => {
     try {
@@ -50,7 +53,7 @@ function Users() {
       console.log(updatedUserData);
       setUpdateModal(false); // Changed to false to close the modal after update
       toast.success(updatedUserData.message);
-      setupdate((prev) => prev + 1);
+      setUpdate((prev) => prev + 1);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -97,7 +100,7 @@ function Users() {
       toast.success("User deleted successfully!");
     } catch (error) {
       setError(error.message);
-      setupdate((prev) => prev + 1);
+      setUpdate((prev) => prev + 1);
       toast.error(error.message);
     }
   };
@@ -118,13 +121,14 @@ function Users() {
         if (data.success) {
           console.log("Users retrieved successfully:", data.users);
           setUsers(data.users);
+          setFilteredUsers(data.users);
           setLoading(false);
           if (update === 1) {
-            toast.success("users fetch successfully");
+            toast.success("Users fetched successfully");
           }
         } else {
           console.error("Error retrieving users:", data.message);
-          toast.error(data.message)
+          toast.error(data.message);
           setLoading(false);
         }
       } catch (error) {
@@ -135,9 +139,25 @@ function Users() {
     fetchUsers();
   }, [update]);
 
+  useEffect(() => {
+    const filtered = users.filter((user) =>
+      `${user.firstName} ${user.lastName}`
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  }, [search, users]);
+
   return (
-    <div className="" >
+    <div className="">
       <div className="h-screen text-white text-center mx-auto w-[80%]">
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="mb-4 p-2 bg-transparent border rounded w-full placeholder-white text-left border-b hover:text-black border-indigo-200 hover:bg-gray-50"
+        />
         {loading ? (
           <Loader />
         ) : (
@@ -145,6 +165,7 @@ function Users() {
             <thead className="bg-indigo-100 text-indigo-500">
               <tr>
                 <th className="px-3 py-2">ID</th>
+                {/* <th className="px-3 py-2">Profile</th> */}
                 <th className="px-3 py-2">Name</th>
                 <th className="px-3 py-2">Email</th>
                 <th className="px-3 py-2">Role</th>
@@ -152,10 +173,10 @@ function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
+              {filteredUsers.map((user, index) => (
                 <tr
                   key={user._id}
-                  className="border-b hover:text-black  border-indigo-200 hover:bg-indigo-50"
+                  className="border-b hover:text-black border-indigo-200 hover:bg-gray-50"
                   style={{
                     animation: `fadeIn 0.5s ease-in-out ${
                       index * 0.2
@@ -164,12 +185,27 @@ function Users() {
                   }}
                 >
                   <td className="px-3 py-2">{user.empID}</td>
-                  <td className="px-3 py-2">{` ${user.firstName}  ${user.lastName} `}</td>
+                  {/* <td className="px-3 py-2">
+
+                    {user.profile ? (
+                      <div>
+                        
+                        <img src="" alt="" />
+
+                      </div>
+                    ) : (
+                      <div className="text-2xl">
+
+                        <CgProfile />
+                      </div>
+                    )}
+                  </td> */}
+                  <td className="px-3 py-2">{`${user.firstName} ${user.lastName}`}</td>
                   <td className="px-3 py-2">{user.email}</td>
                   <td className="px-3 py-2">{user.role}</td>
                   <td className="px-3 py-2 flex justify-around">
                     <button
-                      className="bg-indigo-500  hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+                      className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
                       onClick={() => {
                         setSelectedUser(user);
                         setUpdateModal(true);
@@ -193,6 +229,7 @@ function Users() {
           </table>
         )}
       </div>
+
       {updateModal && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-in-out">
           <div className="bg-blue-100 text-black rounded-lg shadow-xl p-8 w-3/4 max-w-lg">
