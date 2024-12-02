@@ -8,6 +8,7 @@ import Footer from "./Components/Footer";
 import Dashboard from "./Components/Admin/Dashboard";
 import Profile from "./Components/Profile";
 import Error from "./Components/Error";
+import Network from "./Components/Admin/Network";
 
 
 
@@ -26,6 +27,9 @@ function App() {
           path="/admin/dashboard" 
           element={user ? <Dashboard /> : <Navigate to="/login" />} 
         />
+
+        <Route path="/admin/network" element={ <Network /> } />
+
         <Route 
           path="/profile" 
           element={user ? <Profile /> : <Navigate to="/login" />} 

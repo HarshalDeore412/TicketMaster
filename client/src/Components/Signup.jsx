@@ -1,319 +1,313 @@
-import React, { useState } from 'react';
-import processes from "../Assets/JSON/process.json"
-import toast from 'react-hot-toast';
-import Header from './Header';
+import React, { useState } from "react";
+import processes from "../Assets/JSON/process.json";
+import toast from "react-hot-toast";
+import Header from "./Header";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
-import Loader from './Loader';
-import BASE_URL from '../Assets/JSON/Base_Url.json'
-
-
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
+import BASE_URL from "../Assets/JSON/Base_Url.json";
 
 function Signup() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [empID, setEmpID] = useState('');
-    const [process, setProcess] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [otp, setOtp] = useState(null)
-    const [loading, setLoading] = useState(false);
-    
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [empID, setEmpID] = useState("");
+  const [process, setProcess] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [otp, setOtp] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    const [isOTPAvailable, setIsOTPAvailable] = useState(false)
-    const [passVisible, setPassVisible] = useState(false)
-    const navigate = useNavigate();
-    
-    function isValidGmail(email) {
-        const gmailRegex = /^([a-zA-Z0-9._%+-]+)@(gmail|googlemail)\.com$/;
-        return gmailRegex.test(email);
+  const [isOTPAvailable, setIsOTPAvailable] = useState(false);
+  const [passVisible, setPassVisible] = useState(false);
+  const navigate = useNavigate();
+
+  function isValidGmail(email) {
+    const gmailRegex = /^([a-zA-Z0-9._%+-]+)@(gmail|googlemail)\.com$/;
+    return gmailRegex.test(email);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${BASE_URL.BASE_URL}user/create-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          empID,
+          process,
+          password,
+          otp,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      console.log(data);
+      alert("Signup successful!");
+      navigate("/login");
+    } catch (error) {
+      if (error instanceof TypeError) {
+        setError("Network error. Please try again.");
+      } else if (error.message === "Failed to fetch") {
+        setError("Server error. Please try again later.");
+      } else if (error.response) {
+        setError(error.response.data.message);
+      } else if (error.message === "JSON Hydraulic") {
+        setError("Invalid response from server.");
+      } else {
+        setError(error.message);
+      }
     }
+  };
 
+  function Toggle() {
+    if (passVisible) {
+      setPassVisible(false);
+    } else {
+      setPassVisible(true);
+    }
+  }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-          const response = await fetch(`${BASE_URL.BASE_URL}user/create-user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              firstName,
-              lastName,
-              email,
-              empID,
-              process,
-              password,
-              otp,
-            }),
-          });
-      
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-          }
-      
-          const data = await response.json();
-      
-          if (!data.success) {
-            throw new Error(data.message);
-          }
-      
-          console.log(data);
-          alert('Signup successful!');
-          navigate('/login');
-        } catch (error) {
-          if (error instanceof TypeError) {
-            setError('Network error. Please try again.');
-          } else if (error.message === 'Failed to fetch') {
-            setError('Server error. Please try again later.');
-          } else if (error.response) {
-            setError(error.response.data.message);
-          } else if (error.message === 'JSON Hydraulic') {
-            setError('Invalid response from server.');
-          } else {
-            setError(error.message);
-          }
-        }
-      };
-      
+  const SendOTP = async (e) => {
+    if (isValidGmail(email)) {
+      setLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL.BASE_URL}user/send-otp`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
 
-    function Toggle() {
-        if(passVisible){
-            setPassVisible(false)
-        }else{
-            setPassVisible(true)
-        }
-    };
+        const data = await response.json();
+        console.log("response", response);
+        console.log("response.data", data);
 
-    const SendOTP = async (e) => {
-        if (isValidGmail(email)) {
-            setLoading(true);
-            try {
-                const response = await fetch(`${BASE_URL.BASE_URL}user/send-otp`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email })
-                });
-    
-                const data = await response.json();
-                console.log("response", response);
-                console.log("response.data", data);
-    
-                if (data.success) {
-                    toast.success(data.message);
-                    setIsOTPAvailable(true);
-                } else {
-                    toast.error(data.message);
-                }
-            } catch (e) {
-                console.log("ERROR: ", e);
-                toast.error(e.message);
-            } finally {
-                setLoading(false);
-            }
+        if (data.success) {
+          toast.success(data.message);
+          setIsOTPAvailable(true);
         } else {
-            toast.error('Please enter a valid email address');
+          toast.error(data.message);
         }
-    };
-    
-    return (
+      } catch (e) {
+        console.log("ERROR: ", e);
+        toast.error(e.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Please enter a valid email address");
+    }
+  };
 
-            <div className='mx-auto h-full ' >
-                <div>
-                    <div>
-                        <Header />
-                    </div>
-                    <div className='flex justify-center py-20 ' >
-{
-    loading ? (
-        <Loader />
-    ) : (  <div className=" w-[60%] mx-auto border px-4 md:p-2 lg:px-4 bg-transparent rounded-lg shadow-md">
-        <h2 className="text-2xl w-[20%] mx-auto  font-bold mb-4">Signup Form</h2>
-        {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded-lg">
-                {error}
-            </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div className='flex justify-between	' >
-                <label className="block text-sm font-medium mb-2" htmlFor="firstName">
+  return (
+    <div className="mx-auto w-[80%] h-screen ">
+      <div>
+        <div>
+          <Header />
+        </div>
+        <div className="flex justify-center py-20 ">
+          {loading ? (
+            <Loader />
+          ) : (
+            <div className=" w-[60%] mx-auto border px-4 md:p-2 lg:px-4 bg-transparent rounded-lg shadow-md">
+              <h2 className="text-2xl w-[20%] mx-auto  font-bold mb-4">
+                Signup Form
+              </h2>
+              {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded-lg">
+                  {error}
+                </div>
+              )}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="firstName"
+                  >
                     First Name:
-                </label>
-                <input
+                  </label>
+                  <input
                     type="text"
                     id="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
                     className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-            <div className='flex justify-between	' >
-                <label className="block text-sm font-medium mb-2" htmlFor="lastName">
+                  />
+                </div>
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="lastName"
+                  >
                     Last Name:
-                </label>
-                <input
+                  </label>
+                  <input
                     type="text"
                     id="lastName"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
                     className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-            <div className='flex justify-between	' >
-                <label className="block text-sm font-medium mb-2" htmlFor="email">
+                  />
+                </div>
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="email"
+                  >
                     Email:
-                </label>
-                <input
+                  </label>
+                  <input
                     type="email"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-            <div className='flex justify-between	' >
-
-                <label className="block text-sm font-medium mb-2" htmlFor="process">
+                  />
+                </div>
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="process"
+                  >
                     Process name
-                </label>
-                <select
+                  </label>
+                  <select
                     id="process"
                     value={process}
                     onChange={(e) => setProcess(e.target.value)}
                     required
                     className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                >
-                    <option className='bg-transparent text-black'  value="">Select Process name</option>
+                  >
+                    <option className="bg-transparent text-black" value="">
+                      Select Process name
+                    </option>
                     {processes.map((process) => (
-                        <option className='bg-transparent text-black '  key={process.id} value={process.name}>
-                            {process.name}
-                        </option>
+                      <option
+                        className="bg-transparent text-black "
+                        key={process.id}
+                        value={process.name}
+                      >
+                        {process.name}
+                      </option>
                     ))}
-                </select>
-
-            </div>
-            <div className='flex justify-between	' >
-                <label className="block text-sm font-medium mb-2" htmlFor="process">
+                  </select>
+                </div>
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="process"
+                  >
                     Employee ID:
-                </label>
-                <input
+                  </label>
+                  <input
                     type="text"
                     id="empID"
                     value={empID}
                     onChange={(e) => setEmpID(e.target.value)}
                     required
                     className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-            <div className='flex justify-between	' >
-                <label className="block text-sm font-medium mb-2" htmlFor="password">
+                  />
+                </div>
+                <div className="flex justify-between	">
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    htmlFor="password"
+                  >
                     Password:
-                </label>
-                <div className='flex w-[80%] '  >
+                  </label>
+                  <div className="flex w-[80%] ">
+                    <input
+                      type={passVisible ? "text" : "password"}
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="block bg-transparent w-[90%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="w-[10%] text-2xl  px-8 py-2">
+                      {passVisible ? (
+                        <FaEyeSlash onClick={Toggle} />
+                      ) : (
+                        <FaEye onClick={Toggle} />
+                      )}
+                    </span>
+                  </div>
+                </div>
 
+                {isOTPAvailable ? (
+                  <div className="flex justify-between	">
+                    <label
+                      className="block text-sm font-medium mb-2"
+                      htmlFor="otp"
+                    >
+                      OTP
+                    </label>
 
                     <input
-                        type={ passVisible ? "text" : "password"  }
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="block bg-transparent w-[90%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      minlength="off"
+                      maxlength="off"
+                      autocomplete="off"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      type="text"
+                      id="otp"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                      className="block w-[80%] p-2 pl-10 text-sm text-black-700 bg-transparent rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className='w-[10%] text-2xl  px-8 py-2' >
-                        {
+                  </div>
+                ) : (
+                  ""
+                )}
 
-                            passVisible ? (<FaEyeSlash onClick={Toggle}  />
-                            ) : (<FaEye onClick={Toggle} />)
-
-                        }
-                    </span>
-
-                </div>
-            </div>
-
-            {
-                isOTPAvailable ? (<div className='flex justify-between	' >
-                    <label className="block text-sm font-medium mb-2" htmlFor="otp">
-                        OTP
-                    </label>
-                    
-                        <input
-                            minlength="off"
-                            maxlength="off"
-                            autocomplete="off"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            spellcheck="false"
-
-                            type="text"
-                            id="otp"
-                            value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
-                            required
-                            className="block w-[80%] p-2 pl-10 text-sm text-black-700 bg-transparent rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                        />
-
-
-                
-
-                </div>) : ("")
-            }
-
-
-
-            {
-                isOTPAvailable ? (<button
+                {isOTPAvailable ? (
+                  <button
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-700 flex text-center w-[15%] mx-auto text-white font-bold py-2 px-14 rounded-lg"
-                >
+                  >
                     Signup
-                </button>) : (<div
+                  </button>
+                ) : (
+                  <div
                     onClick={SendOTP}
                     className="flex w-[20%] justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-yellow-100 text-black backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-emerald-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
-                >
+                  >
                     Send OTP
-         
-                </div>
-                )
-            }
-
-        </form>
-    </div>)
-}
-                    </div>
-                </div>
+                  </div>
+                )}
+              </form>
             </div>
-
-    );
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Signup;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState } from 'react';
 // import processes from "../Assets/JSON/process.json";
@@ -342,11 +336,10 @@ export default Signup;
 //     }
 
 //     const handleSubmit = async (e) => {
-        
+
 //         e.preventDefault();
 
 //         console.log(BASE_URL)
-
 
 //         try {
 //             const response = await fetch(`${BASE_URL}user/create-user`, {
@@ -523,7 +516,6 @@ export default Signup;
 //                             </label>
 //                             <div className='flex w-[80%] '  >
 
-
 //                                 <input
 //                                     type={ passVisible ? "text" : "password"  }
 //                                     id="password"
@@ -549,7 +541,7 @@ export default Signup;
 //                                 <label className="block text-sm font-medium mb-2" htmlFor="otp">
 //                                     OTP
 //                                 </label>
-                                
+
 //                                     <input
 //                                         minlength="off"
 //                                         maxlength="off"
@@ -566,13 +558,8 @@ export default Signup;
 //                                         className="block w-[80%] p-2 pl-10 text-sm text-gray-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
 //                                     />
 
-
-                            
-
 //                             </div>) : ("")
 //                         }
-
-
 
 //                         {
 //                             isOTPAvailable ? (<button
@@ -609,7 +596,3 @@ export default Signup;
 // }
 
 // export default Signup;
-
-
-
-
