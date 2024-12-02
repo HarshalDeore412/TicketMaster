@@ -14,14 +14,14 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[80%] mx-auto md:p-2 lg:p-1 h-screen">
+    <div className="w-[80%] mx-auto md:p-2 lg:p-1 h-full">
   <Header />
 
   <main className="flex justify-center mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
     {localStorage.getItem("token") ? (
       <CreateTicket />
     ) : (
-      <section className="h-screen mt-80 ">
+      <section className="h-full mt-80 ">
         <div className=" bg-opacity-90 p-8 rounded-lg shadow-lg">
           <div className="mx-auto max-w-xl text-center">
             <h1 className="text-3xl font-extrabold sm:text-5xl text-white">
