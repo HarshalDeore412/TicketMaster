@@ -391,6 +391,8 @@ exports.deleteTicket = async (req, res) => {
   }
 };
 
+
+
 exports.getMyTickets = async (req, res) => {
   try {
     // Validate user existence
@@ -415,8 +417,9 @@ exports.getMyTickets = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    // Find tickets by empID with pagination
+    // Find tickets by empID with pagination and sort by date in descending order
     const myTickets = await Ticket.find({ empID })
+      .sort({ dateTime: -1 }) // Sort by date in descending order
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -425,10 +428,9 @@ exports.getMyTickets = async (req, res) => {
 
     // Check if tickets exist
     if (!myTickets || myTickets.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "You Dont Have Tickets",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "You don't have tickets" });
     }
 
     console.log("My tickets fetched successfully");
@@ -445,7 +447,6 @@ exports.getMyTickets = async (req, res) => {
     });
   } catch (err) {
     console.error(`Error: ${err.message} | Stack: ${err.stack}`);
-
     // Handle specific errors
     if (err.message === "Unauthorized access") {
       return res

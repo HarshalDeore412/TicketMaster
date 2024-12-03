@@ -5,6 +5,9 @@ import toast from "react-hot-toast";
 import Process from "../Assets/JSON/process.json";
 import Loader from "./Loader";
 import BASE_URL from "../Assets/JSON/Base_Url.json";
+import { FaFileImage } from "react-icons/fa";
+
+
 
 const Profile = () => {
   const [user, setUser] = useState({});

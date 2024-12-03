@@ -15,7 +15,6 @@ function Tickets() {
   const [ticketsPerPage, setTicketsPerPage] = useState(10);
   const [totalTickets, setTotalTickets] = useState(0);
   const navigate = useNavigate()
-  // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const getMyTickets = async () => {
     try {
@@ -75,8 +74,7 @@ function Tickets() {
         ) : error ? (
           <p className="text-xl p-4">{error}</p>
         ) : tickets && tickets.length > 0 ? (
-          <div className="flex  w-[100%] h-screen flex-wrap overflow-y-auto">
-            <h1 className="text-2xl text-center p-4">Ticket List</h1>
+          <div className="flex w-[100%] p-3 h-screen flex-wrap overflow-y-auto">
             {tickets.map((ticket) => (
               <TicketCard
                 key={ticket.id}
@@ -90,12 +88,13 @@ function Tickets() {
                 {/* Items per page */}
                 <div className="gap-2 bg-transparent text-black ">
                   <select
+                  className="bg-transparent text-white"
                     value={ticketsPerPage}
                     onChange={handleTicketsPerPageChange}
                   >
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
+                    <option className="bg-white text-black" value="5">5</option>
+                    <option className="bg-white text-black" value="10">10</option>
+                    <option className="bg-white text-black" value="20">20</option>
                   </select>
                 </div>
 

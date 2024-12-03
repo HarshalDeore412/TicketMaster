@@ -156,7 +156,7 @@ function Users() {
           placeholder="Search by name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="mb-4 p-2 bg-transparent border rounded w-full placeholder-white text-left border-b hover:text-black border-indigo-200 hover:bg-gray-50"
+          className="mb-4 p-2 bg-transparent border rounded w-full placeholder-white  hover:placeholder:text-black text-left border-b hover:text-black border-indigo-200 hover:bg-gray-50"
         />
         {loading ? (
           <Loader />

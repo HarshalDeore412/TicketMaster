@@ -63,7 +63,7 @@ function Header() {
         </Link>
       )}
       {localStorage.getItem("token") ? (
-        <Link to="/profile" className="flex items-center text-white hover:text-gray-300 transition duration-300">
+        <Link to="/profile" className="flex items-center text-white text-2xl hover:text-gray-300 transition duration-300">
           <CgProfile className="text-2xl" />
         </Link>
       ) : (

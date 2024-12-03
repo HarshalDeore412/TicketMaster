@@ -19,7 +19,7 @@ const AdminTickets = () => {
   const [totalTickets, setTotalTickets] = useState(0);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [downlaodLoading , setDownloadLoading] = useState(false)
+  const [downlaodLoading, setDownloadLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     status: "",
@@ -125,7 +125,6 @@ const AdminTickets = () => {
 
   const handleDeleteById = async (id) => {
     try {
-
       // Ask for user confirmation
       const userConfirmed = window.confirm(
         "Are you sure you want to delete this?"
@@ -162,7 +161,7 @@ const AdminTickets = () => {
 
   const downloadReport = async () => {
     try {
-      setDownloadLoading(true)
+      setDownloadLoading(true);
 
       const query = new URLSearchParams({
         startDate: filters.startDate,
@@ -193,8 +192,7 @@ const AdminTickets = () => {
       a.click();
       a.remove();
 
-      setDownloadLoading(false)
-
+      setDownloadLoading(false);
     } catch (error) {
       console.error("Failed to download report:", error);
     }
@@ -212,63 +210,73 @@ const AdminTickets = () => {
   return (
     <div className="h-full  text-white flex animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in justify-center">
       <div className="h-full w-[100%] pt-2 text-center mx-auto">
-        <div className="h-full flex justify-center">
-          <div className="h-full w-[100%] pt-2 text-center mx-auto">
-            <div className="filters flex flex-col border-b border-red-700  md:flex-row items-center justify-around text-white bg-transparent p-1 rounded-lg shadow-lg mb-2">
-              <input
-                type="text"
-                name="empID"
-                placeholder="Filter by Employee ID"
-                value={filters.empID}
-                onChange={handleFilterChange}
-                className="filter-input bg-transparent placeholder:text-white border border-current px-8 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
-              />
-              <select
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-                className="filter-select bg-transparent border border-current px-8 text-black-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
-              >
-                <option className="text-black bg-yellow-200" value=""> All </option>
-                <option className="text-black bg-yellow-200" value="Open">Open</option>
-                <option className="text-black bg-yellow-200" value="Processing">Processing</option>
-                <option className="text-black bg-yellow-200" value="Closed">Closed</option>
-              </select>
-              <input
-                type="date"
-                name="startDate"
-                value={filters.startDate}
-                onChange={handleFilterChange}
-                className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
-              />
-              <input
-                type="date"
-                name="endDate"
-                value={filters.endDate}
-                onChange={handleFilterChange}
-                className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 shadow-md"
-              />
+        <div className="h-full w-[100%] pt-2 flex flex-col  md:flex-row justify-between text-white bg-transparent p-1   mb-2">
+          <input
+            type="text"
+            name="empID"
+            placeholder="Filter by Employee ID"
+            value={filters.empID}
+            onChange={handleFilterChange}
+            className="filter-input bg-transparent placeholder:text-white border border-current px-8 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+          />
+          <select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+            className="filter-select bg-transparent border border-current px-8 text-black-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+          >
+            <option className="text-black bg-yellow-200" value="">
+              {" "}
+              All{" "}
+            </option>
+            <option className="text-black bg-yellow-200" value="Open">
+              Open
+            </option>
+            <option className="text-black bg-yellow-200" value="Processing">
+              Processing
+            </option>
+            <option className="text-black bg-yellow-200" value="Closed">
+              Closed
+            </option>
+          </select>
+          <input
+            type="date"
+            name="startDate"
+            value={filters.startDate}
+            onChange={handleFilterChange}
+            className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 md:mr-2 shadow-md"
+          />
+          <input
+            type="date"
+            name="endDate"
+            value={filters.endDate}
+            onChange={handleFilterChange}
+            className="filter-input border border-current px-8 bg-transparent text-white-800 rounded-lg px-4 py-2 mb-2 md:mb-0 shadow-md"
+          />
 
-              <button
-                onClick={downloadReport}
-                className="inline-block bg-transparent flex py-2 rounded border border-current px-8  text-sm font-medium text-white-600 transition hover:-rotate-2 hover:scale-110 focus:outline-none focus:ring active:text-white-500"
-              >
-                <span className="mr-2">Download</span>
-                {
-                  downlaodLoading ? (<div> <div className="..."> </div> </div>) : (<MdDownload className="text-2xl" />)
-                }
-
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={downloadReport}
+            className="inline-block bg-transparent flex py-2 rounded border border-current px-8  text-sm font-medium text-white-600 transition hover:-rotate-2 hover:scale-110 focus:outline-none focus:ring active:text-white-500"
+          >
+            <span className="mr-2">Download</span>
+            {downlaodLoading ? (
+              <div>
+                {" "}
+                <div className="..."> </div>{" "}
+              </div>
+            ) : (
+              <MdDownload className="text-2xl" />
+            )}
+          </button>
         </div>
+
         {loading ? (
           <div className="w-screen flex justiy-center items-center">
             {" "}
             {<Loader />}{" "}
           </div>
         ) : (
-          <div className="overflow-x-auto w-full h-screen mx-auto p-2  ">
+          <div className="overflow-x-auto w-full h-screen mx-auto p-1 rounded-md  ">
             <table className="table-auto border w-full text-left">
               <thead className="bg-indigo-500 text-white">
                 <tr>
@@ -347,8 +355,9 @@ const AdminTickets = () => {
                         minute: "2-digit",
                       })}
                     </td>
-                    <td className="px-4 py-2 text-xl text-red-800">
+                    <td className="px-4 py-2 text-xl cursor-pointer text-white-800">
                       <MdDeleteOutline
+                        className="text-white-800 "
                         onClick={() => handleDeleteById(ticket._id)}
                       />
                     </td>
@@ -359,25 +368,26 @@ const AdminTickets = () => {
             <div className="pagination flex justify-between items-center px-10 mt-4 space-x-2">
               <div>
                 <select
-                  className="bg-transparent"
+                  className="bg-transparent text-white border-b"
                   value={ticketsPerPage}
                   onChange={handleTicketsPerPageChange}
                 >
-                  <option className="bg-transparent" value="5">
+                  <option className=" bg-white text-black" value="5">
                     5
                   </option>
-                  <option className="bg-transparent" value="10">
+                  <option className=" bg-white text-black" value="10">
                     10
                   </option>
-                  <option className="bg-transparent" value="20">
+                  <option className=" bg-white text-black" value="20">
                     20
                   </option>
                 </select>
               </div>
+
               <div className="flex justify-center mt-4 space-x-2">
                 <button
                   onClick={() => setCurrentPage(1)}
-                  className="page-number px-3 py-1 rounded-md border bg-white text-indigo-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
+                  className="page-number px-3 py-1 rounded-md border bg-transparent text-white-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
                   disabled={currentPage === 1}
                 >
                   First
@@ -386,7 +396,7 @@ const AdminTickets = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  className="page-number px-3 py-1 rounded-md border bg-white text-indigo-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
+                  className="page-number px-3 py-1 rounded-md border bg-transparent text-white-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
                   disabled={currentPage === 1}
                 >
                   <FaLessThan />
@@ -402,8 +412,8 @@ const AdminTickets = () => {
                       onClick={() => setCurrentPage(number)}
                       className={`page-number px-3 py-1 rounded-md border ${
                         currentPage === number
-                          ? "bg-indigo-500 text-white border-indigo-500"
-                          : "bg-white text-indigo-500 border-gray-300"
+                          ? "bg-transparent text-white-500  border-indigo-500"
+                          : "bg-transparent text-white-500  border-gray-300"
                       } hover:bg-indigo-700 hover:text-white focus:outline-none`}
                     >
                       {number}
@@ -415,14 +425,14 @@ const AdminTickets = () => {
                       Math.min(prev + 1, pageNumbers.length)
                     )
                   }
-                  className="page-number px-3 py-1 rounded-md border bg-white text-indigo-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
+                  className="page-number px-3 py-1 rounded-md border bg-transparent text-white-500  border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
                   disabled={currentPage === pageNumbers.length}
                 >
                   <FaGreaterThan />
                 </button>
                 <button
                   onClick={() => setCurrentPage(pageNumbers.length)}
-                  className="page-number px-3 py-1 rounded-md border bg-white text-indigo-500 border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
+                  className="page-number px-3 py-1 rounded-md border bg-transparent text-white-500  border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
                   disabled={currentPage === pageNumbers.length}
                 >
                   Last
