@@ -31,7 +31,13 @@ const AdminTickets = () => {
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
-    fetchTickets();
+    
+
+    setTimeout(() => {
+      fetchTickets();
+    }, 2000);
+
+
   }, [currentPage, filters, ticketsPerPage]);
 
   const fetchTickets = useCallback(async () => {
@@ -271,9 +277,10 @@ const AdminTickets = () => {
         </div>
 
         {loading ? (
-          <div className="w-screen flex justiy-center items-center">
-            {" "}
-            {<Loader />}{" "}
+          <div className="w-full h-screen flex justify-center items-center">
+            
+            {<Loader />}
+
           </div>
         ) : (
           <div className="overflow-x-auto w-full h-screen mx-auto p-1 rounded-md  ">
@@ -441,6 +448,7 @@ const AdminTickets = () => {
             </div>
           </div>
         )}
+
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}

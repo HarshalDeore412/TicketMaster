@@ -22,7 +22,7 @@ function Home() {
       <CreateTicket />
     ) : (
       <section className="h-full mt-80 ">
-        <div className=" bg-opacity-90 p-8 rounded-lg shadow-lg">
+        <div className=" bg-opacity-90 p-8 rounded-lg shadow-2xl">
           <div className="mx-auto max-w-xl text-center">
             <h1 className="text-3xl font-extrabold sm:text-5xl text-white">
               Welcome To ADA Tech

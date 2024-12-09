@@ -136,7 +136,13 @@ function Users() {
         setLoading(false);
       }
     };
-    fetchUsers();
+    
+    
+    setTimeout(() => {
+      fetchUsers();
+    }, 2000);
+    
+ 
   }, [update]);
 
   useEffect(() => {

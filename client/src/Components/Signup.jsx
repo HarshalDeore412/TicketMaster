@@ -123,11 +123,11 @@ function Signup() {
         <div>
           <Header />
         </div>
-        <div className="flex justify-center py-20 ">
+        <div className="flex justify-center py-40">
           {loading ? (
             <Loader />
           ) : (
-            <div className=" w-[60%] mx-auto border px-4 md:p-2 lg:px-4 bg-transparent rounded-lg shadow-md">
+            <div className=" w-[60%] mx-auto px-4 md:p-2 lg:px-4 bg-transparent rounded-lg shadow-2xl">
               <h2 className="text-2xl w-[20%] mx-auto  font-bold mb-4">
                 Signup Form
               </h2>
@@ -150,7 +150,7 @@ function Signup() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
-                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 <div className="flex justify-between	">
@@ -166,7 +166,7 @@ function Signup() {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
-                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 <div className="flex justify-between	">
@@ -182,7 +182,7 @@ function Signup() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    className="block bg-transparent w-[80%] p-2 pl-10 text-sm text-white-700 border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 <div className="flex justify-between	">
@@ -197,7 +197,7 @@ function Signup() {
                     value={process}
                     onChange={(e) => setProcess(e.target.value)}
                     required
-                    className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option className="bg-transparent text-black" value="">
                       Select Process name
@@ -226,7 +226,7 @@ function Signup() {
                     value={empID}
                     onChange={(e) => setEmpID(e.target.value)}
                     required
-                    className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-[80%] bg-transparent p-2 pl-10 text-sm text-white-700  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 <div className="flex justify-between	">
@@ -243,7 +243,7 @@ function Signup() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="block bg-transparent w-[90%] p-2 pl-10 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      className="block bg-transparent w-[90%] p-2 pl-10 text-sm text-white-700  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <span className="w-[10%] text-2xl  px-8 py-2">
                       {passVisible ? (
@@ -276,7 +276,7 @@ function Signup() {
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                       required
-                      className="block w-[80%] p-2 pl-10 text-sm text-black-700 bg-transparent rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-[80%] p-2 pl-10 text-sm text-black-700 bg-transparent  border-b border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 ) : (
@@ -286,14 +286,14 @@ function Signup() {
                 {isOTPAvailable ? (
                   <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 flex text-center w-[15%] mx-auto text-white font-bold py-2 px-14 rounded-lg"
+                    className="flex w-[20%] justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-transparent text-black backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-emerald-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
                   >
                     Signup
                   </button>
                 ) : (
                   <div
                     onClick={SendOTP}
-                    className="flex w-[20%] justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-yellow-100 text-black backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-emerald-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
+                    className="flex w-[20%] justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-transparent text-black backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-emerald-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
                   >
                     Send OTP
                   </div>

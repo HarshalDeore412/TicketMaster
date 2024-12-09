@@ -48,6 +48,8 @@ function RaiseTicketForm() {
           }
         );
 
+        
+
         if (!response.ok) {
           throw new Error(response.statusText);
         }
@@ -85,7 +87,7 @@ function RaiseTicketForm() {
   };
 
   return (
-    <div className="max-w-2xl border-2 border-yellow-400 bg-indigo-700 mx-auto p-4 md:p-6 lg:p-8 rounded-lg shadow-md">
+    <div className="max-w-2xl rounded-md bg-indigo-700 shadow-[25px_15px_0px_0px_rgba(70,70,70)] mx-auto p-4 md:p-6 lg:p-8">
       <h2 className="text-2xl text-center font-bold mb-4">Ticket Form</h2>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded-lg">
@@ -98,10 +100,10 @@ function RaiseTicketForm() {
         </div>
       )}
       {
-        loading ? ( <Loader /> ) : (<form onSubmit={handleSubmit} className="space-y-6">
+        loading ? ( <div className="w-full h-screen flex justify-center items-center" >   <Loader />  </div> ) : (<form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-wrap">
             <label className="block text-sm font-medium mb-2" htmlFor="deskNo">
-              Desk No:
+              Desk No
             </label>
             <input
               type="text"
@@ -110,12 +112,12 @@ function RaiseTicketForm() {
               onChange={(e) => setDeskNo(e.target.value)}
               required
               placeholder="Enter your desk number"
-              className="block bg-transparent w-full p-2 text-sm text-gray-200 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+              className="block bg-transparent w-full p-2 text-sm text-white-500  border-b border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
             />
           </div>
           <div className="flex flex-wrap">
             <label className="block text-sm font-medium mb-2" htmlFor="issue">
-              Issue:
+              Issue
             </label>
             <input
               type="text"
@@ -124,7 +126,7 @@ function RaiseTicketForm() {
               onChange={(e) => setIssue(e.target.value)}
               required
               placeholder="Describe the issue"
-              className="block w-full p-2 text-sm bg-transparent text-gray-700 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+              className="block w-full p-2 text-sm bg-transparent text-white-500  border-b border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
             />
           </div>
           <div className="flex flex-wrap">
@@ -132,7 +134,7 @@ function RaiseTicketForm() {
               className="block text-sm font-medium mb-2"
               htmlFor="description"
             >
-              Description:
+              Description
             </label>
             <textarea
               id="description"
@@ -140,10 +142,10 @@ function RaiseTicketForm() {
               onChange={(e) => setDescription(e.target.value)}
               required
               placeholder="Provide a detailed description"
-              className="block w-full bg-transparent p-2 text-sm text-white-700 rounded-lg border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+              className="block w-full bg-transparent p-2 text-sm text-white-700  border-b border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
             />
           </div>
-  
+
           <div className="">
             <label
               htmlFor="image"

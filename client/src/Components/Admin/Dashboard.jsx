@@ -23,13 +23,13 @@ function Dashboard() {
   <div className="flex justify-center py-5"> 
   <div className="flex items-center"> 
     <button 
-      className={`${!toggle ? "bg-yellow-200 " : "bg-transparent border-1 border-l border-r border-yellow-300  "} w-1/2 m-1 text-black font-bold py-2 px-4 rounded-lg focus:outline-none  focus:ring-indigo-100`}
+      className={`${!toggle ? "bg-transparent  border-b-2 border-red-500  " : "bg-transparent   border-red-500  "} w-1/2 m-1 text-white  font-bold py-2 px-4 focus:outline-none  focus:ring-indigo-100`}
       onClick={() => setToggle(false)}
     > 
       Users 
     </button> 
     <button 
-      className={`${toggle ? "bg-yellow-200 " : "bg-transparent border-1 border-l border-r border-yellow-300  "} w-1/2 m-1 text-black font-bold py-2 px-4 rounded-lg focus:outline-none  focus:ring-indigo-100`}
+      className={`${toggle ? "bg-transparent    border-b-2  border-red-500  " : "bg-transparent   border-red-500  "} w-1/2 m-1 text-white  font-bold py-2 px-4  focus:outline-none  focus:ring-indigo-100`}
       onClick={() => setToggle(true)}
     > 
       Tickets 

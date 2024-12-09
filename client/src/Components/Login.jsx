@@ -61,15 +61,15 @@ function Login() {
         <Header />
       </div>
 
-      <div className="flex justify-center items-center h-screen">
-        <div className="max-w-md p-4 md:p-6 lg:p-8 ring-2 ring-purple-850 ring-offset-2 ring-offset-slate-850 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold mb-4">Login</h2>
+      <div className="flex  justify-center items-center h-screen">
+        <div className="max-w-md p-4 md:p-6  lg:p-8  rounded-lg shadow-2xl">
+          <h2 className="text-lg text-center font-bold mb-4">Login</h2>
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded-lg">
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-6 text-white">
+          <form onSubmit={handleSubmit} className="space-y-6  text-white">
             <div>
               <label className="block text-sm font-medium mb-2" htmlFor="email">
                 Email:
