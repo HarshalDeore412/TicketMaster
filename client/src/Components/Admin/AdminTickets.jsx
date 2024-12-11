@@ -31,13 +31,9 @@ const AdminTickets = () => {
   // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
-    
-
     setTimeout(() => {
       fetchTickets();
     }, 2000);
-
-
   }, [currentPage, filters, ticketsPerPage]);
 
   const fetchTickets = useCallback(async () => {
@@ -278,9 +274,7 @@ const AdminTickets = () => {
 
         {loading ? (
           <div className="w-full h-screen flex justify-center items-center">
-            
             {<Loader />}
-
           </div>
         ) : (
           <div className="overflow-x-auto w-full h-screen mx-auto p-1 rounded-md  ">
@@ -399,7 +393,7 @@ const AdminTickets = () => {
                 >
                   First
                 </button>
-                <button
+                {/* <button
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
@@ -407,7 +401,7 @@ const AdminTickets = () => {
                   disabled={currentPage === 1}
                 >
                   <FaLessThan />
-                </button>
+                </button> */}
                 {pageNumbers
                   .slice(
                     Math.max(currentPage - 3, 0),
@@ -426,7 +420,7 @@ const AdminTickets = () => {
                       {number}
                     </button>
                   ))}
-                <button
+                {/* <button
                   onClick={() =>
                     setCurrentPage((prev) =>
                       Math.min(prev + 1, pageNumbers.length)
@@ -436,7 +430,7 @@ const AdminTickets = () => {
                   disabled={currentPage === pageNumbers.length}
                 >
                   <FaGreaterThan />
-                </button>
+                </button> */}
                 <button
                   onClick={() => setCurrentPage(pageNumbers.length)}
                   className="page-number px-3 py-1 rounded-md border bg-transparent text-white-500  border-gray-300 hover:bg-indigo-700 hover:text-white focus:outline-none"
