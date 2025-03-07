@@ -1,35 +1,3 @@
-// const nodemailer = require("nodemailer");
-
-
-// const mailSender = async (Email , title , body ) => {
-//     try {
-//         let transporter = nodemailer.createTransport({
-//             host:process.env.MAIL_HOST,
-//             auth:{
-//                 user: process.env.MAIL_USER,
-//                 pass: process.env.MAIL_PASS,
-//             }
-//         })
-
-//         let info = await transporter.sendMail({
-//             from: "ADA Support",
-//             to:`${Email}`,
-//             subject: `${title}`,
-//             html: `${body}`,
-//         })
-
-//         console.log(info);
-//         console.log("Mail Send")
-//         return info;
-
-//     }catch(err){
-//         console.log(err.message);
-//     }
-// }
-
-// module.exports = mailSender;
-
-
 
 const nodemailer = require("nodemailer");
 

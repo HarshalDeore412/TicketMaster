@@ -9,7 +9,8 @@ import Dashboard from "./Components/Admin/Dashboard";
 import Profile from "./Components/Profile";
 import Error from "./Components/Error";
 import Network from "./Components/Admin/Network";
-
+import ForgotPassForm from "./Components/ForgotPassForm";
+import PasswordReset from "./Components/PasswordReset";
 
 // 
 
@@ -26,11 +27,12 @@ function App() {
           <Route path="/tickets" element={<Tickets />} />
           <Route
             path="/admin/dashboard"
-            element={user ? <Dashboard /> : <Navigate to="/login" />}
+            element={user ? <Dashboard /> : <Navigate to="/admin/dashboard" />}
           />
 
           <Route path="/admin/network" element={<Network />} />
-
+          <Route path="/forgot_Password" element={<ForgotPassForm />} />
+          <Route path="/reset-password/:token" element={<PasswordReset />} />
           <Route
             path="/profile"
             element={user ? <Profile /> : <Navigate to="/login" />}

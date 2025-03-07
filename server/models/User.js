@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   password: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ticket' }]
+  tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ticket' }],
+  profilePictureUrl : {
+    type : String,  
+  }
 });
 
 const User = mongoose.model('User', userSchema);

@@ -38,10 +38,3 @@
   }
 }
 
-
-.bg-video {
-  background-image: url("./Assets/videos/background.mp4");
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
-}

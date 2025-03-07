@@ -5,6 +5,11 @@ const dotenv = require("dotenv").config();
 const OTP = require("../models/OTP");
 const mailSender = require("../utils/mailSender");
 const mongoose = require("mongoose");
+const ForgotPass = require("../models/ForgotPass");
+const { generateToken } = require('../utils/generateToken');
+const nodemailer = require('nodemailer');
+const newEmail = require('../MailTemplates/new-email.html');
+const { uploadImageToCloudinary } = require('./ticket')
 
 exports.createUser = async (req, res) => {
   try {
@@ -422,8 +427,6 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-
-
 exports.updateUser = async (req, res) => {
   console.log("Request to update user info received");
 
@@ -476,76 +479,170 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+
+// exports.updateProfile = async (req, res) => {
+//   try {
+//     const email = req.user.email;
+//     console.log(`Request received for profile update for user: ${email}`);
+//     let profilePictureUrl;
+
+//     if (req.files && req.files.profilePicture) {
+//       try {
+//         profilePictureUrl = await uploadImageToCloudinary(req.files.profilePicture);
+//         console.log(`Profile picture uploaded successfully: ${profilePictureUrl}`);
+//       } catch (uploadError) {
+//         console.error(`Cloudinary upload error: ${uploadError.message}`);
+//         return res.status(500).json({
+//           success: false,
+//           message: "Error uploading profile picture",
+//           error: uploadError.message,
+//         });
+//       }
+//     }
+
+
+//     console.log(`Profile picture URL: ${profilePictureUrl}`);
+
+//     const updateData = {};
+//     if (req.body.firstName) updateData.firstName = req.body.firstName;
+//     if (req.body.lastName) updateData.lastName = req.body.lastName;
+//     if (req.body.empID) updateData.empID = req.body.empID;
+//     if (req.body.process) updateData.process = req.body.process;
+//     if (req.body.role) updateData.role = req.body.role;
+//     if (profilePictureUrl) updateData.profilePicture = profilePictureUrl;
+
+//     console.log(`Updating user profile with data: ${JSON.stringify(updateData)}`);
+
+//     const user = await USER.findOneAndUpdate(
+//       { email: email },
+//       updateData,
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!user) {
+//       console.log(`User not found: ${email}`);
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     console.log(`Profile details updated successfully for user: ${email}`);
+//     res.status(200).json({
+//       success: true,
+//       message: "Profile details updated successfully",
+//       user,
+//     });
+
+//   } catch (error) {
+//     console.error(`Error while updating profile details: ${error.message}`);
+//     if (error.name === "ValidationError") {
+//       console.log(`Validation error: ${error.message}`);
+//       return res.status(400).json({
+//         success: false,
+//         message: "Validation error",
+//         error: error.message,
+//       });
+//     } else if (error.name === "CastError") {
+//       console.log(`Invalid data format: ${error.message}`);
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid data format",
+//       });
+//     } else {
+//       console.log(`Internal server error: ${error.message}`);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Error while updating profile details",
+//         error: error.message,
+//       });
+//     }
+//   }
+// };
+
 exports.updateProfile = async (req, res) => {
   try {
-    const _email_ = req.user.email;
+    const email = req.user.email;
+    let profilePictureUrl;
 
-    console.log("Request received for profile update");
-
-    // Validate input
-    const { firstName, lastName, jobTitle, phone } = req.body;
-    if (!firstName || !lastName || !jobTitle || !phone) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+    if (req.files && req.files.profilePicture) {
+      try {
+        profilePictureUrl = await uploadImageToCloudinary(req.files.profilePicture);
+        console.log(`Profile picture uploaded successfully: ${profilePictureUrl}`);
+      } catch (uploadError) {
+        console.error(`Cloudinary upload error: ${uploadError.message}`);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading profile picture",
+          error: uploadError.message,
+        });
+      }     
     }
 
-    // Validate email format
-    if (!req.user || !req.user.email) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized access",
-      });
-    }
+    const updateData = {};
+    if (req.body.firstName) updateData.firstName = req.body.firstName;
+    if (req.body.lastName) updateData.lastName = req.body.lastName;
+    if (req.body.empID) updateData.empID = req.body.empID;
+    if (req.body.process) updateData.process = req.body.process;
+    if (profilePictureUrl) updateData.profilePicture = profilePictureUrl;
 
-    // Update user profile
-    const user = await User.findOneAndUpdate(
-      { email: _email_ },
-      { firstName, lastName, jobTitle, phone },
+    console.log(`Updating user profile with data: ${JSON.stringify(updateData)}`);
+
+    const user = await USER.findOneAndUpdate(
+      { email: email },
+      updateData,
       { new: true, runValidators: true }
     );
 
-    // Check if the user was found and updated
     if (!user) {
+      console.log(`User not found: ${email}`);
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
 
-    console.log("Profile details updated successfully");
-
+    console.log(`Profile details updated successfully for user: ${email}`);
     res.status(200).json({
       success: true,
       message: "Profile details updated successfully",
       user,
     });
   } catch (error) {
-    console.error("Error while updating profile details:", error);
-
+    console.error(`Error while updating profile details: ${error.message}`);
     if (error.name === "ValidationError") {
+      console.log(`Validation error: ${error.message}`);
       return res.status(400).json({
         success: false,
         message: "Validation error",
         error: error.message,
       });
+    } else if (error.name === "CastError") {
+      console.log(`Invalid data format: ${error.message}`);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid data format",
+      });
+    } else {
+      console.log(`Internal server error: ${error.message}`);
+      return res.status(500).json({
+        success: false,
+        message: "Error while updating profile details",
+        error: error.message,
+      });
     }
-
-    res.status(500).json({
-      success: false,
-      message: "Error while updating profile details",
-      error: error.message,
-    });
   }
 };
 
 exports.getProfileDetails = async (req, res) => {
   try {
+    console.log("Received request to fetch profile details");
     const user = req.user;
+    console.log(`User object: ${JSON.stringify(user)}`);
 
     // Check if the user object and email exist
     if (!user || !user.email) {
+      console.error("Invalid user email");
       return res.status(400).json({
         success: false,
         message: "Invalid user email",
@@ -553,18 +650,22 @@ exports.getProfileDetails = async (req, res) => {
     }
 
     const email = user.email;
+    console.log(`Fetching user details for email: ${email}`);
 
     // Fetch user details
     const userDetails = await USER.findOne({ email });
+    console.log(`Fetched user details: ${JSON.stringify(userDetails)}`);
 
     // Check if user details exist
     if (!userDetails) {
+      console.error("User details not found");
       return res.status(404).json({
         success: false,
         message: "User details not found",
       });
     }
 
+    console.log("Returning user details in response");
     return res.status(200).json({
       success: true,
       message: "Details fetched successfully",
@@ -575,11 +676,13 @@ exports.getProfileDetails = async (req, res) => {
 
     // Handle specific errors
     if (error.name === "CastError") {
+      console.error("Invalid data format");
       return res.status(400).json({
         success: false,
         message: "Invalid data format",
       });
     } else if (error.name === "ValidationError") {
+      console.error("Validation error:", error.message);
       return res.status(400).json({
         success: false,
         message: "Validation error",
@@ -587,11 +690,303 @@ exports.getProfileDetails = async (req, res) => {
       });
     } else {
       // Handle general errors
+      console.error("Internal server error:", error.message);
       return res.status(500).json({
         success: false,
         message: "Internal server error",
         error: error.message,
       });
     }
+  }
+};
+
+
+exports.ForgotPass = async (req, res) => {
+  try {
+    console.log('Forgot password request received');
+
+    // Check if email is provided
+    if (!req.body.email) {
+      console.log('Email not provided. Returning 400 error');
+      return res.status(400).json({
+        status: 'error',
+        code: 400,
+        message: 'Email not provided',
+        details: 'Please provide a valid email address',
+      });
+    }
+
+    const Uemail = req.body.email;
+    const email = Uemail.toLowerCase();
+
+    // Check if email is valid
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      console.log('Invalid email. Returning 400 error');
+      return res.status(400).json({
+        status: 'error',
+        code: 400,
+        message: 'Invalid email',
+        details: 'Please provide a valid email address',
+      });
+    }
+
+    const user = await USER.findOne({ email });
+    console.log(`User found: ${user ? 'yes' : 'no'}`);
+
+    if (!user) {
+      console.log('User not found. Returning 404 error');
+      return res.status(404).json({
+        status: 'error',
+        code: 404,
+        message: 'User not found',
+        details: 'User with the provided email address does not exist',
+      });
+    }
+
+    const token = await generateToken(user);
+    console.log(`Token generated: ${token}`);
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.MAIL_HOST,
+      secure: false,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"ADA Tech Solution Pvt Ltd " <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'Password Reset Request',
+      html: `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f4f7;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #d1e3e8;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1.5s ease-out;
+    }
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #1a3e5b;
+      font-size: 26px;
+      animation: slideIn 1.5s ease-out;
+    }
+    .content {
+      font-size: 16px;
+      color: #3a3a3a;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-out;
+    }
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      animation: fadeIn 2.5s ease-out;
+    }
+    .button-container a {
+      background-color: #28a745;
+      color: #fff;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 16px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease-in-out;
+    }
+    .button-container a:hover {
+      background-color: #218838;
+    }
+    .expire {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+      animation: fadeIn 3s ease-out;
+    }
+    .support {
+      font-size: 16px;
+      color: #3a3a3a;
+      margin-bottom: 20px;
+      animation: fadeIn 3.5s ease-out;
+    }
+    .footer {
+      font-size: 16px;
+      color: #3a3a3a;
+      margin-bottom: 20px;
+      animation: fadeIn 4s ease-out;
+    }
+    .footer small {
+      font-size: 12px;
+      color: #999;
+      animation: fadeIn 4.5s ease-out;
+    }
+    @media only screen and (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      .button-container a {
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="title">Password Reset Request</h2>
+    <p class="content">Dear ${user.firstName.toLowerCase().charAt(0).toUpperCase() + user.firstName.slice(1).toLowerCase()},</p>
+    <p class="content">We have received a request to reset your password for your account. If you did not make this request, please ignore this email and your password will remain unchanged.</p>
+    <p class="content">To reset your password, please click on the following link:</p>
+    <div class="button-container">
+      <a href="http://localhost:3000/reset-password/${token}">Reset Password</a>
+    </div>
+    <p class="expire">This link will expire in 1 hour.</p>
+    <p class="support">If you have any issues resetting your password, please contact our support team at <a href="mailto:support@adatechsolutions.com" style="color: #0056b3;">support@adatechsolutions.com</a>.</p>
+    <p class="footer">Best regards,</p>
+    <p class="footer">ADA Tech Solution Pvt Ltd</p>
+    <p class="footer"><small>ADA Tech Solution Pvt Ltd, All Rights Reserved.</small></p>
+  </div>
+</body>
+</html>
+
+
+
+        `,
+    };
+
+    console.log('Sending email...');
+
+    let info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+
+    console.log('Returning success response');
+    return res.json({
+      status: 'success',
+      code: 200,
+      message: 'Email sent successfully',
+      details: 'Password reset link has been sent to your email address',
+      data: {
+        token: token,
+        expires: '1 hour',
+      },
+    });
+  } catch (error) {
+    console.error('Error sending email:', error);
+
+    if (error.code === 'EAUTH') {
+      console.log('Authentication error. Returning 401 error');
+      return res.status(401).json({
+        status: 'error',
+        code: 401,
+        message: 'Authentication error',
+        details: 'Invalid email or password',
+      });
+    } else if (error.code === 'ENOTFOUND') {
+      console.log('Email not found. Returning 404 error');
+      return res.status(404).json({
+        status: 'error',
+        code: 404,
+        message: 'Email not found',
+        details: 'User with the provided email address does not exist',
+      });
+    } else {
+      console.log('Returning 500 error');
+      return res.status(500).json({
+        status: 'error',
+        code: 500,
+        message: 'Error sending email',
+        details: 'Failed to send password reset email',
+      });
+    }
+  }
+}
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    // Check if token and password are provided
+    if (!token || !password) {
+      return res.status(400).json({
+        status: 'error',
+        code: 400,
+        message: 'Token and password are required',
+        details: 'Please provide both token and password',
+      });
+    }
+
+    const passwordReset = await ForgotPass.findOne({ token });
+
+    // Check if token is valid
+    if (!passwordReset) {
+      return res.status(404).json({
+        status: 'error',
+        code: 404,
+        message: 'Invalid token',
+        details: 'The provided token is not valid',
+      });
+    }
+
+    const user = await USER.findById(passwordReset.user);
+
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        code: 404,
+        message: 'User not found',
+        details: 'The user associated with the token does not exist',
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    await ForgotPass.deleteMany({ user: user._id });
+
+    return res.json({
+      status: 'success',
+      code: 200,
+      message: 'Password reset successfully',
+      details: 'Your password has been reset successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 'error',
+      code: 500,
+      message: 'Internal server error',
+      details: 'An unexpected error occurred while resetting your password',
+    });
   }
 };
